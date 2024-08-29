@@ -165,6 +165,123 @@
         </div>
     </footer>
 
+    <script>
+        // Carousel Auto Movement
+        const carouselImages = document.querySelector('.carousel-images');
+        let currentIndex = 0;
+
+        function moveCarousel() {
+            const items = document.querySelectorAll('.carousel-item');
+            currentIndex = (currentIndex + 1) % items.length;
+            const offset = -currentIndex * 100;
+            carouselImages.style.transform = `translateX(${offset}%)`;
+        }
+
+        setInterval(moveCarousel, 3000); // Move carousel every 3 seconds
+
+        // Popup Gallery
+        const galleryItems = document.querySelectorAll('.gallery-item img');
+        const popup = document.createElement('div');
+        popup.classList.add('popup');
+        document.body.appendChild(popup);
+
+        let currentGallery = [];
+        let currentImageIndex = 0;
+
+        function openPopup(images, index) {
+            currentGallery = images;
+            currentImageIndex = index;
+            popup.style.display = 'flex';
+            updatePopupImage();
+        }
+
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+
+        function updatePopupImage() {
+            popup.innerHTML = `
+            <span class="close-popup">&times;</span>
+            <img src="${currentGallery[currentImageIndex]}" alt="Popup Image">
+            <div class="popup-controls">
+                <button class="prev-btn">&lt;</button>
+                <button class="next-btn">&gt;</button>
+            </div>
+        `;
+        }
+
+        galleryItems.forEach((img, index) => {
+            img.addEventListener('click', () => {
+                const images = Array.from(img.closest('.gallery-grid').querySelectorAll('img')).map(i => i.src);
+                openPopup(images, index);
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('close-popup')) {
+                closePopup();
+            }
+            if (e.target.classList.contains('prev-btn')) {
+                currentImageIndex = (currentImageIndex - 1 + currentGallery.length) % currentGallery.length;
+                updatePopupImage();
+            }
+            if (e.target.classList.contains('next-btn')) {
+                currentImageIndex = (currentImageIndex + 1) % currentGallery.length;
+                updatePopupImage();
+            }
+        });
+
+        // Popup CSS (You can also move this to your CSS file)
+        const style = document.createElement('style');
+        style.textContent = `
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+    
+        .popup img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 8px;
+        }
+    
+        .close-popup {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+    
+        .popup-controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: absolute;
+            bottom: 20px;
+        }
+    
+        .prev-btn, .next-btn {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    `;
+        document.head.appendChild(style);
+    </script>
+
 </body>
 
 </html>
