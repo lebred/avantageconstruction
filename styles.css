@@ -257,14 +257,13 @@ footer {
   }
 }
 
-/* Language Switcher */
-.language-switcher {
-  position: absolute;
-  top: 15px;
-  right: 20px;
+/* Language Switcher Inside Navbar */
+nav .language-switcher {
+  margin-left: 20px;
+  display: inline-block;
 }
 
-.language-switcher select {
+nav .language-switcher select {
   padding: 5px;
   font-size: 16px;
   border: none;
@@ -274,6 +273,6 @@ footer {
   cursor: pointer;
 }
 
-.language-switcher select:focus {
+nav .language-switcher select:focus {
   outline: none;
 }
