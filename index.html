@@ -21,7 +21,7 @@
                 <span class="hamburger-icon">&#9776;</span>
             </div>
             <div class="menu">
-                <a href="#home">Home</a>
+                <a href="#">Home</a>
                 <a href="#about">About</a>
                 <a href="#services">Services</a>
                 <a href="#gallery">Gallery</a>
@@ -271,15 +271,26 @@
         document.querySelectorAll('nav .menu a').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const targetSection = document.getElementById(targetId);
 
-                window.scrollTo({
-                    top: targetSection.offsetTop - 50, // Adjust offset if needed
-                    behavior: 'smooth'
-                });
+                const targetId = this.getAttribute('href').substring(1);
+
+                if (targetId === "") {
+                    // Scroll to the top if "Home" is clicked
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    const targetSection = document.getElementById(targetId);
+
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 50, // Adjust offset if needed
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
+
 
         // Hamburger Menu Toggle
         const menuIcon = document.querySelector('.menu-icon');

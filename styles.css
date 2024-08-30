@@ -16,8 +16,8 @@ body {
 
 /* General Navbar Styles */
 nav {
-  background-color: #155d38; /* Updated color */
-  padding: 15px 0;
+  background-color: #155d38;
+  padding: 5px 0; /* Reduced padding */
   position: sticky;
   top: 0;
   width: 100%;
@@ -30,11 +30,55 @@ nav .container {
   align-items: center;
 }
 
-nav .logo a {
+nav .logo img {
+  height: 50px; /* Keep the logo height as it was */
+  width: auto;
+}
+
+nav .menu a {
   color: #ecf0f1;
-  font-size: 24px;
   text-decoration: none;
-  font-weight: bold;
+  margin-left: 20px;
+  font-size: 18px;
+  line-height: 50px; /* Align text vertically with the logo */
+}
+
+nav .menu-icon {
+  display: none;
+  font-size: 30px;
+  color: #ecf0f1;
+  cursor: pointer;
+  line-height: 50px; /* Align hamburger icon vertically with the logo */
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  nav .menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100%;
+    width: 250px;
+    background-color: #155d38;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 50px 20px;
+    transition: right 0.3s ease-in-out;
+  }
+
+  nav .menu a {
+    margin: 20px 0;
+    font-size: 20px;
+    line-height: normal; /* Reset line-height for mobile */
+  }
+
+  nav .menu-icon {
+    display: block;
+  }
+
+  .menu.active {
+    right: 0;
+  }
 }
 
 /* Logo Styling */
@@ -104,7 +148,8 @@ nav .menu a:hover {
   background-image: url("/img/hero.jpg");
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 60vh; /* Adjust this value to control the max height */
+  max-height: 600px; /* Maximum height constraint */
   position: relative;
   display: flex;
   align-items: center;
