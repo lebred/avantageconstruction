@@ -1,6 +1,12 @@
-from selenium import webdriver
-from bs4 import BeautifulSoup
+import os
 import time
+from bs4 import BeautifulSoup
+
+from scrape import download_image, get_high_res_image
+from selenium import webdriver
+
+from urllib.parse import urljoin, urlparse
+
 
 # Setup Selenium WebDriver
 driver = webdriver.Chrome()  # Make sure to have the correct driver installed
