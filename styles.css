@@ -272,7 +272,7 @@ nav .menu a:hover {
   .about-text {
     margin-right: 0;
     margin-bottom: 20px; /* Add space between text and image on mobile */
-    text-align: center; /* Center text on smaller screens */
+    text-align: left; /* Center text on smaller screens */
   }
 
   .about-image {
