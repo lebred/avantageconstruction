@@ -234,20 +234,21 @@ nav .menu a:hover {
 
 .about-image {
   flex: 1;
-  min-width: 300px; /* Ensure image is not too small on smaller screens */
+  min-width: 300px; /* Ensure the image is not too small on smaller screens */
+  max-width: 50%; /* Ensure the image doesn't take up too much space on large screens */
 }
 
 .about-image img {
-  width: 100%;
-  height: auto;
+  width: 100%; /* Ensure the image scales properly */
+  height: auto; /* Maintain aspect ratio */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .about-text {
-  flex: 2;
-  margin-left: 20px;
-  max-width: 600px; /* Limit the width of the text section */
+  flex: 1;
+  margin-right: 20px;
+  max-width: 50%; /* Ensure the text doesn't take up too much space on large screens */
 }
 
 .about-text h2 {
@@ -264,17 +265,18 @@ nav .menu a:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
   .about-content {
-    flex-direction: column;
+    flex-direction: column-reverse; /* Image appears below text on mobile */
   }
 
   .about-text {
-    margin-left: 0;
+    margin-right: 0;
     margin-top: 20px;
     text-align: center; /* Center text on smaller screens */
   }
 
   .about-image {
     text-align: center;
+    max-width: 100%; /* Ensure the image uses full width on mobile */
   }
 }
 
