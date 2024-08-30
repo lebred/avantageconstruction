@@ -51,7 +51,7 @@ def scrape_images(url, folder="images"):
 
 
 # Replace with the URL you want to scrape
-url_to_scrape = "https://example.com"
+url_to_scrape = "https://www.avantagejmr.com/"
 
 # Call the function to scrape images
 scrape_images(url_to_scrape)
