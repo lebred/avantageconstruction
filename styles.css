@@ -31,7 +31,7 @@ nav .container {
 }
 
 nav .logo img {
-  height: 50px; /* Keep the logo height as it was */
+  height: 40px; /* Keep the logo height as it was */
   width: auto;
 }
 
@@ -83,7 +83,7 @@ nav .menu-icon {
 
 /* Logo Styling */
 nav .logo img {
-  height: 75px; /* Adjust this value to control the logo size */
+  height: 60px; /* Adjust this value to control the logo size */
   width: auto;
 }
 
