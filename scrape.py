@@ -35,8 +35,6 @@ def scrape_images(url, folder="images"):
     # Send a HTTP request to the URL
     response = requests.get(url)
     response.raise_for_status()
-    headers = {'User-Agent': 'Mozilla/5.0'}
-response = requests.get(url, headers=headers)
 
 
     # Parse the HTML content using BeautifulSoup
