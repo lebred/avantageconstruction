@@ -309,7 +309,10 @@ nav .menu a:hover {
 }
 
 .contact form {
-  max-width: 600px;
+  max-width: 100%;
+  width: 100%;
+  padding: 0 20px; /* Add padding for small screens */
+  box-sizing: border-box;
   margin: 0 auto;
 }
 
@@ -326,11 +329,13 @@ nav .menu a:hover {
 
 .contact input,
 .contact textarea {
-  width: 100%;
+  width: 100%; /* Make the input fields responsive */
+  max-width: 100%; /* Ensure the input fields do not exceed the screen width */
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .contact button {
@@ -342,10 +347,30 @@ nav .menu a:hover {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+  width: 100%;
+  max-width: 300px; /* Ensure the button does not exceed a reasonable width */
+  box-sizing: border-box;
 }
 
 .contact button:hover {
   background-color: #3498db;
+}
+
+/* Adjustments for Mobile Devices */
+@media (max-width: 768px) {
+  .contact form {
+    padding: 0 10px;
+  }
+
+  .contact input,
+  .contact textarea {
+    font-size: 14px;
+  }
+
+  .contact button {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
 }
 
 /* Footer */
