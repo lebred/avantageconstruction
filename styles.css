@@ -1,10 +1,24 @@
 /* General Styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Lora", "Merriweather", serif;
   margin: 0;
   padding: 0;
   background-color: #f5f5f5;
   color: #333;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Merriweather", "Lora", serif;
+}
+
+p,
+a,
+li {
+  font-family: "Lora", serif;
 }
 
 .container {
@@ -229,19 +243,22 @@ nav .menu a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap; /* Ensure it wraps on smaller screens */
+  flex-wrap: wrap;
   flex-direction: row; /* Default to row for large screens */
 }
 
 .about-image {
   flex: 1;
-  min-width: 300px; /* Ensure the image is not too small on smaller screens */
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
   max-width: 50%; /* Ensure the image doesn't take up too much space on large screens */
 }
 
 .about-image img {
-  width: 100%; /* Ensure the image scales properly */
-  height: auto; /* Maintain aspect ratio */
+  width: auto; /* Maintain natural width */
+  height: auto; /* Maintain natural height */
+  max-width: 100%; /* Ensure it doesn’t exceed its container width */
+  max-height: 677px; /* Ensure it doesn’t exceed its natural height */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -272,12 +289,19 @@ nav .menu a:hover {
   .about-text {
     margin-right: 0;
     margin-bottom: 20px; /* Add space between text and image on mobile */
-    text-align: left; /* Center text on smaller screens */
+    text-align: left; /* Align text to the left on mobile */
+    max-width: 90%; /* Make the text box wider */
+    margin-left: auto;
+    margin-right: auto; /* Center the text block horizontally */
   }
 
   .about-image {
     text-align: center;
     max-width: 100%; /* Ensure the image uses full width on mobile */
+  }
+
+  .about-image img {
+    max-height: none; /* Remove the height restriction for smaller screens */
   }
 }
 
