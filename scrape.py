@@ -26,6 +26,34 @@ def download_image(url, folder):
         print(f"Failed to download {url}: {e}")
 
 
+# Function to get the highest resolution image URL
+def get_high_res_image(img_tag, base_url):
+    # Check for common lazy loading attributes
+    potential_urls = [
+        img_tag.get("src"),
+        img_tag.get("data-src"),
+        img_tag.get("data-lazy"),
+        img_tag.get("data-srcset"),
+        img_tag.get("srcset"),
+    ]
+
+    # Filter out None values
+    potential_urls = [url for url in potential_urls if url]
+
+    # Process srcset if present
+    for url in potential_urls:
+        if "srcset" in img_tag.attrs:
+            srcset = img_tag["srcset"]
+            urls = [u.split(" ")[0] for u in srcset.split(",")]
+            potential_urls.extend(urls)
+
+    # Choose the highest resolution image
+    high_res_url = max(potential_urls, key=lambda url: len(url))
+
+    # Join relative URL with the base URL
+    return urljoin(base_url, high_res_url)
+
+
 # Main function to scrape images
 def scrape_images(url, folder="images"):
     # Create the folder if it doesn't exist
@@ -36,18 +64,15 @@ def scrape_images(url, folder="images"):
     response = requests.get(url)
     response.raise_for_status()
 
-
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(response.text, "html.parser")
 
     # Find all image tags
     img_tags = soup.find_all("img")
 
-    # Extract the image URLs
-    img_urls = [urljoin(url, img["src"]) for img in img_tags if "src" in img.attrs]
-
     # Download each image
-    for img_url in img_urls:
+    for img_tag in img_tags:
+        img_url = get_high_res_image(img_tag, url)
         download_image(img_url, folder)
 
 
