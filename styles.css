@@ -37,6 +37,12 @@ nav .logo a {
   font-weight: bold;
 }
 
+/* Logo Styling */
+nav .logo img {
+  height: 75px; /* Adjust this value to control the logo size */
+  width: auto;
+}
+
 nav .menu {
   display: flex;
   align-items: center;
