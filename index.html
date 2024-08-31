@@ -156,14 +156,11 @@
             link.addEventListener('click', function (e) {
                 e.preventDefault(); // Prevent the default action (scrolling to top)
                 const galleryType = this.dataset.gallery;
-                console.log("Gallery Type Clicked:", galleryType); // Debug log
                 openGallery(galleryType);
             });
         });
 
         function openGallery(type) {
-            console.log("Opening gallery for:", type); // Debug log
-
             const galleryContainer = document.createElement('div');
             galleryContainer.classList.add('gallery-popup');
             document.body.appendChild(galleryContainer);
@@ -194,14 +191,14 @@
 
             function showImage(index) {
                 galleryContainer.innerHTML = `
-            <div class="gallery-content">
-                <span class="gallery-close">&times;</span>
-                <img src="${galleryImages[index].src}" alt="">
-                <div class="gallery-subtext">${galleryImages[index].subtext}</div>
-                <button class="gallery-prev">&lt;</button>
-                <button class="gallery-next">&gt;</button>
-            </div>
-        `;
+        <div class="gallery-content">
+            <span class="gallery-close">&times;</span>
+            <img src="${galleryImages[index].src}" alt="">
+            <div class="gallery-subtext">${galleryImages[index].subtext}</div>
+            <button class="gallery-prev">&lt;</button>
+            <button class="gallery-next">&gt;</button>
+        </div>
+    `;
                 attachGalleryEventListeners();
             }
 
@@ -223,6 +220,7 @@
 
             showImage(currentIndex);
         }
+
 
         // Add CSS for the popup gallery
         const style = document.createElement('style');
