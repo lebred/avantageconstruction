@@ -481,6 +481,21 @@
           });
         });
       });
+      document.addEventListener("DOMContentLoaded", () => {
+        const cookieConsentBar = document.getElementById("cookie-consent-bar");
+        const acceptCookiesButton = document.getElementById("accept-cookies");
+
+        // Check if the user has already accepted cookies
+        if (!localStorage.getItem("cookiesAccepted")) {
+          cookieConsentBar.style.display = "flex"; // Show the consent bar
+        }
+
+        // Handle accept button click
+        acceptCookiesButton.addEventListener("click", () => {
+          localStorage.setItem("cookiesAccepted", "true"); // Store the acceptance in local storage
+          cookieConsentBar.style.display = "none"; // Hide the consent bar
+        });
+      });
     </script>
 
     <!-- Cookie Consent Bar -->

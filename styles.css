@@ -629,3 +629,55 @@ nav .language-switcher:hover {
 .fade-out {
   animation: fadeOut 0.5s forwards;
 }
+/* Cookie Consent Bar */
+.cookie-consent-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cookie-consent-bar p {
+  margin: 0;
+  padding: 0 10px;
+  font-size: 14px;
+  flex: 1;
+}
+
+.cookie-consent-button {
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.cookie-consent-button:hover {
+  background-color: #3498db;
+}
+
+@media (max-width: 768px) {
+  .cookie-consent-bar {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .cookie-consent-button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
