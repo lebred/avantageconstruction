@@ -231,28 +231,16 @@
                         break;
                 }
 
-                // Clone first and last slides for seamless looping
-                const firstSlideClone = galleryImages[0];
-                const lastSlideClone = galleryImages[galleryImages.length - 1];
-
                 galleryContainer.innerHTML = `
         <div class="gallery-content">
             <span class="gallery-close">&times;</span>
             <div class="gallery-scroll">
-                <div class="gallery-slide">
-                    <img src="${lastSlideClone.src}" alt="">
-                    <div class="gallery-subtext">${lastSlideClone.subtext}</div>
-                </div>
                 ${galleryImages.map(image => `
                     <div class="gallery-slide">
                         <img src="${image.src}" alt="">
                         <div class="gallery-subtext">${image.subtext}</div>
                     </div>
                 `).join('')}
-                <div class="gallery-slide">
-                    <img src="${firstSlideClone.src}" alt="">
-                    <div class="gallery-subtext">${firstSlideClone.subtext}</div>
-                </div>
             </div>
             <button class="gallery-prev">&lt;</button>
             <button class="gallery-next">&gt;</button>
@@ -261,47 +249,24 @@
 
                 const galleryScroll = galleryContainer.querySelector('.gallery-scroll');
                 const slides = galleryScroll.querySelectorAll('.gallery-slide');
-                const totalSlides = slides.length;
-                let currentIndex = 1; // Start at the first real slide
-
-                // Adjust slide width for all slides
-                slides.forEach(slide => {
-                    slide.style.width = `${galleryScroll.clientWidth}px`;
-                });
-
-                // Set initial position to show the real first slide
-                galleryScroll.style.transform = `translateX(-${galleryScroll.clientWidth}px)`;
+                let currentIndex = 0;
 
                 function updateGalleryPosition() {
                     console.log(`Updating gallery position to index: ${currentIndex}`);
                     const offset = -currentIndex * galleryScroll.clientWidth;
-                    galleryScroll.style.transition = 'transform 0.5s ease';
                     galleryScroll.style.transform = `translateX(${offset}px)`;
-
-                    // If we move to the cloned slides, reset without animation
-                    galleryScroll.addEventListener('transitionend', () => {
-                        if (currentIndex === 0) {
-                            galleryScroll.style.transition = 'none';
-                            currentIndex = totalSlides - 2; // Move to the last real slide
-                            galleryScroll.style.transform = `translateX(-${currentIndex * galleryScroll.clientWidth}px)`;
-                        } else if (currentIndex === totalSlides - 1) {
-                            galleryScroll.style.transition = 'none';
-                            currentIndex = 1; // Move to the first real slide
-                            galleryScroll.style.transform = `translateX(-${galleryScroll.clientWidth}px)`;
-                        }
-                    });
                 }
 
                 // Handle navigation buttons with looping
                 galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
                     console.log("Next button clicked");
-                    currentIndex++;
+                    currentIndex = (currentIndex + 1) % slides.length; // Loop around
                     updateGalleryPosition();
                 });
 
                 galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
                     console.log("Previous button clicked");
-                    currentIndex--;
+                    currentIndex = (currentIndex - 1 + slides.length) % slides.length; // Loop around
                     updateGalleryPosition();
                 });
 
@@ -321,12 +286,12 @@
 
                     if (deltaX > 50) {
                         console.log("Swipe detected: moving to previous slide");
-                        currentIndex--;
+                        currentIndex = (currentIndex - 1 + slides.length) % slides.length; // Loop around
                         updateGalleryPosition();
                         isSwiping = false;
                     } else if (deltaX < -50) {
                         console.log("Swipe detected: moving to next slide");
-                        currentIndex++;
+                        currentIndex = (currentIndex + 1) % slides.length; // Loop around
                         updateGalleryPosition();
                         isSwiping = false;
                     }
@@ -350,7 +315,6 @@
                     console.log("Touch end detected, swipe state reset");
                 });
             }
-
 
         });
 
