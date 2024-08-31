@@ -402,15 +402,15 @@ nav .menu a:hover {
   opacity: 1; /* Show overlay text */
 }
 
-/* Mobile Styles - Always Show Overlay Text */
+/* Mobile Styles - Lighten the Darkening Effect */
 @media (max-width: 768px) {
   .gallery-item img {
-    filter: brightness(0.7); /* Slightly darken the image by default */
+    filter: brightness(0.85); /* Lightly darken the image by default */
   }
 
   .gallery-overlay {
-    background-color: rgba(0, 0, 0, 0.5); /* Darker background by default */
-    opacity: 1; /* Always show the overlay text */
+    background-color: rgba(0, 0, 0, 0.3); /* Lighten the dark background */
+    opacity: 1 !important; /* Ensure the overlay text is always visible */
   }
 }
 
