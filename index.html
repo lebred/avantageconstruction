@@ -110,7 +110,7 @@
                 <div class="gallery-item">
                     <a href="#" data-gallery="residential" class="gallery-link">
                         <div class="gallery-overlay">Résidentiel</div>
-                        <img src="/img/residential-thumbnail.jpg" alt="Résidentiel">
+                        <img src="/img/residential-thumbnail.webp" alt="Résidentiel">
                     </a>
                 </div>
                 <div class="gallery-item">
@@ -330,6 +330,141 @@
                 }
             });
         });
+
+        // Lazy loading for gallery images
+        document.querySelectorAll('.gallery-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const galleryType = this.dataset.gallery;
+                loadGallery(galleryType);
+            });
+        });
+
+        function loadGallery(type) {
+            const galleryContainer = document.createElement('div');
+            galleryContainer.classList.add('gallery-popup');
+            document.body.appendChild(galleryContainer);
+
+            let galleryImages = [];
+            switch (type) {
+                case 'residential':
+                    galleryImages = [
+                        { src: '/img/residential1.jpg', subtext: 'Subtext for Residential Image 1' },
+                        { src: '/img/residential2.jpg', subtext: 'Subtext for Residential Image 2' },
+                        { src: '/img/residential3.jpg', subtext: 'Subtext for Residential Image 3' }
+                    ];
+                    break;
+                case 'commercial':
+                    galleryImages = [
+                        { src: '/img/commercial1.jpg', subtext: 'Subtext for Commercial Image 1' },
+                        { src: '/img/commercial2.jpg', subtext: 'Subtext for Commercial Image 2' },
+                        { src: '/img/commercial3.jpg', subtext: 'Subtext for Commercial Image 3' }
+                    ];
+                    break;
+                case 'other':
+                    galleryImages = [
+                        { src: '/img/other1.jpg', subtext: 'Subtext for Other Image 1' },
+                        { src: '/img/other2.jpg', subtext: 'Subtext for Other Image 2' },
+                        { src: '/img/other3.jpg', subtext: 'Subtext for Other Image 3' }
+                    ];
+                    break;
+            }
+
+            let currentIndex = 0;
+
+            function showImage(index) {
+                galleryContainer.innerHTML = `
+            <div class="gallery-content">
+                <span class="gallery-close">&times;</span>
+                <img src="${galleryImages[index].src}" alt="">
+                <div class="gallery-subtext">${galleryImages[index].subtext}</div>
+                <button class="gallery-prev">&lt;</button>
+                <button class="gallery-next">&gt;</button>
+            </div>
+        `;
+            }
+
+            showImage(currentIndex);
+
+            galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % galleryImages.length;
+                showImage(currentIndex);
+            });
+
+            galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+                showImage(currentIndex);
+            });
+
+            galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
+                document.body.removeChild(galleryContainer);
+            });
+        }
+
+        // Add CSS for the popup gallery
+        const style = document.createElement('style');
+        style.textContent = `
+    .gallery-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    }
+
+    .gallery-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        text-align: center;
+    }
+
+    .gallery-content img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 8px;
+    }
+
+    .gallery-subtext {
+        color: white;
+        margin-top: 10px;
+    }
+
+    .gallery-close {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .gallery-prev,
+    .gallery-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .gallery-prev {
+        left: 10px;
+    }
+
+    .gallery-next {
+        right: 10px;
+    }
+`;
+        document.head.appendChild(style);
+
     </script>
 
 
