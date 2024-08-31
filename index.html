@@ -26,9 +26,9 @@
             </div>
             <div class="menu">
                 <a href="#">Accueil</a>
+                <a href="#gallery">Réalisations</a>
                 <a href="#about">Notre mission</a>
                 <a href="#services">Services</a>
-                <a href="#gallery">Gallery</a>
                 <a href="#contact">Contact</a>
                 <!-- <a href="#" class="language-switcher">Français</a> -->
             </div>
@@ -318,70 +318,76 @@
                     const targetId = this.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
 
-                    if (targetId === "") {
+                    if (targetId === "home") {
+                        // Scroll to the top if "Home" is clicked
                         window.scrollTo({
                             top: 0,
                             behavior: 'smooth'
                         });
                     } else {
+                        // Calculate the offset
+                        const offset = 70; // Adjust this value to set the space above the section
+                        const elementPosition = targetSection.getBoundingClientRect().top + window.scrollY - offset;
+
                         window.scrollTo({
-                            top: targetSection.offsetTop - 50, // Adjust offset if needed
+                            top: elementPosition,
                             behavior: 'smooth'
                         });
                     }
                 });
             });
+
         });
     </script>
 
+    <script>
+        // Lazy loading for gallery images
+        document.querySelectorAll('.gallery-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent the default action (scrolling to top)
+                const galleryType = this.dataset.gallery;
+                console.log("Gallery Type Clicked:", galleryType); // Debug log
+                openGallery(galleryType);
+            });
+        });
 
-    // Lazy loading for gallery images
-    document.querySelectorAll('.gallery-link').forEach(link => {
-    link.addEventListener('click', function (e) {
-    e.preventDefault(); // Prevent the default action (scrolling to top)
-    const galleryType = this.dataset.gallery;
-    console.log("Gallery Type Clicked:", galleryType); // Debug log
-    openGallery(galleryType);
-    });
-    });
+        function openGallery(type) {
+            console.log("Opening gallery for:", type); // Debug log
 
-    function openGallery(type) {
-    console.log("Opening gallery for:", type); // Debug log
+            const galleryContainer = document.createElement('div');
+            galleryContainer.classList.add('gallery-popup');
+            document.body.appendChild(galleryContainer);
 
-    const galleryContainer = document.createElement('div');
-    galleryContainer.classList.add('gallery-popup');
-    document.body.appendChild(galleryContainer);
+            let galleryImages = [];
+            switch (type) {
+                case 'residential':
+                    galleryImages = [
+                        { src: '/img/residential1.webp', subtext: 'Living room renovation' },
+                        { src: '/img/residential2.webp', subtext: 'Kitchen makeover' }
+                    ];
+                    break;
+                case 'commercial':
+                    galleryImages = [
+                        { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
+                        { src: '/img/commercial2.jpg', subtext: 'Retail store interior' }
+                    ];
+                    break;
+                case 'other':
+                    galleryImages = [
+                        { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
+                        { src: '/img/other2.jpg', subtext: 'Bathroom tiling' }
+                    ];
+                    break;
+            }
 
-    let galleryImages = [];
-    switch (type) {
-    case 'residential':
-    galleryImages = [
-    { src: '/img/residential1.webp', subtext: 'Living room renovation' },
-    { src: '/img/residential2.webp', subtext: 'Kitchen makeover' }
-    ];
-    break;
-    case 'commercial':
-    galleryImages = [
-    { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
-    { src: '/img/commercial2.jpg', subtext: 'Retail store interior' }
-    ];
-    break;
-    case 'other':
-    galleryImages = [
-    { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
-    { src: '/img/other2.jpg', subtext: 'Bathroom tiling' }
-    ];
-    break;
-    }
+            console.log("Gallery Images Loaded:", galleryImages); // Debug log
 
-    console.log("Gallery Images Loaded:", galleryImages); // Debug log
+            let currentIndex = 0;
 
-    let currentIndex = 0;
+            function showImage(index) {
+                console.log("Showing image at index:", index); // Debug log
 
-    function showImage(index) {
-    console.log("Showing image at index:", index); // Debug log
-
-    galleryContainer.innerHTML = `
+                galleryContainer.innerHTML = `
     <div class="gallery-content">
         <span class="gallery-close">&times;</span>
         <img src="${galleryImages[index].src}" alt="">
@@ -390,28 +396,28 @@
         <button class="gallery-next">&gt;</button>
     </div>
     `;
-    }
+            }
 
-    showImage(currentIndex);
+            showImage(currentIndex);
 
-    galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % galleryImages.length;
-    showImage(currentIndex);
-    });
+            galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % galleryImages.length;
+                showImage(currentIndex);
+            });
 
-    galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
-    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-    showImage(currentIndex);
-    });
+            galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+                showImage(currentIndex);
+            });
 
-    galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
-    document.body.removeChild(galleryContainer);
-    });
-    }
+            galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
+                document.body.removeChild(galleryContainer);
+            });
+        }
 
-    // Add CSS for the popup gallery
-    const style = document.createElement('style');
-    style.textContent = `
+        // Add CSS for the popup gallery
+        const style = document.createElement('style');
+        style.textContent = `
     .gallery-popup {
     position: fixed;
     top: 0;
@@ -471,7 +477,7 @@
     right: 10px;
     }
     `;
-    document.head.appendChild(style);
+        document.head.appendChild(style);
 
 
 
