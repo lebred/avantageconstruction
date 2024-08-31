@@ -112,7 +112,11 @@
           <p>438 777-1501</p>
           <p><a href="mailto:info@avantagejmr.com">info@avantagejmr.com</a></p>
         </div>
-        <form action="https://formspree.io/f/mvgplepr" method="post">
+        <form
+          id="contact-form"
+          action="https://formspree.io/f/mvgplepr"
+          method="post"
+        >
           <input type="text" name="_honeypot" style="display: none" />
 
           <div class="form-group">
@@ -147,346 +151,105 @@
     </footer>
 
     <script>
-      // Lazy load function to set the actual image source
-      function lazyLoadImage(image, src) {
-        if (!image.src) {
-          image.src = src;
-        }
-      }
-
-      // Lazy loading observer
-      function lazyLoadImages() {
-        const images = document.querySelectorAll(".lazy-load");
-        const options = {
-          root: null, // Use the viewport as the container
-          rootMargin: "0px",
-          threshold: 0.1, // Image must be 10% visible before loading
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              const src = img.getAttribute("data-src");
-              lazyLoadImage(img, src);
-              observer.unobserve(img); // Stop observing after loading
-            }
-          });
-        }, options);
-
-        images.forEach((image) => {
-          observer.observe(image);
-        });
-      }
-
-      // Call this function after the gallery is created
-      lazyLoadImages();
-
-      // Carousel Auto Movement
-      const carouselImages = document.querySelector(".carousel-images");
-      if (carouselImages) {
-        let currentIndex = 0;
-
-        function moveCarousel() {
-          const items = document.querySelectorAll(".carousel-item");
-          if (items.length > 0) {
-            currentIndex = (currentIndex + 1) % items.length;
-            const offset = -currentIndex * 100;
-            carouselImages.style.transform = `translateX(${offset}%)`;
-          }
-        }
-
-        setInterval(moveCarousel, 3000); // Move carousel every 3 seconds
-      } else {
-        console.log("Carousel images not found.");
-      }
-
-      // Popup Gallery
       document.addEventListener("DOMContentLoaded", () => {
-        console.log("DOM fully loaded and parsed");
+        document
+          .getElementById("contact-form")
+          .addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent default form submission
 
-        // Handle opening the gallery
-        document.querySelectorAll(".gallery-link").forEach((link) => {
-          link.addEventListener("click", function (e) {
-            e.preventDefault(); // Prevent default link behavior
-            const galleryType = this.dataset.gallery;
-            console.log(`Opening gallery for type: ${galleryType}`);
-            openGallery(galleryType);
+            const form = e.target;
+            const data = new FormData(form);
+            const action = form.action;
+
+            fetch(action, {
+              method: "POST",
+              body: data,
+              headers: {
+                Accept: "application/json",
+              },
+            })
+              .then((response) => {
+                if (response.ok) {
+                  form.reset();
+                  document.getElementById("success-message").style.display =
+                    "block";
+                } else {
+                  alert(
+                    "Une erreur s'est produite. Veuillez réessayer plus tard."
+                  );
+                }
+              })
+              .catch((error) => {
+                alert(
+                  "Une erreur s'est produite. Veuillez réessayer plus tard."
+                );
+              });
           });
-        });
-
-        function openGallery(type) {
-          console.log(`Creating gallery for type: ${type}`);
-          const galleryContainer = document.createElement("div");
-          galleryContainer.classList.add("gallery-popup");
-          document.body.appendChild(galleryContainer);
-
-          let galleryImages = [];
-          switch (type) {
-            case "residential":
-              galleryImages = [
-                {
-                  src: "/img/residential1.webp",
-                  subtext: "Living room renovation",
-                },
-                { src: "/img/residential2.webp", subtext: "Kitchen makeover" },
-              ];
-              break;
-            case "commercial":
-              galleryImages = [
-                {
-                  src: "/img/commercial1.jpg",
-                  subtext: "Office space redesign",
-                },
-                {
-                  src: "/img/commercial2.jpg",
-                  subtext: "Retail store interior",
-                },
-              ];
-              break;
-            case "other":
-              galleryImages = [
-                { src: "/img/other1.jpg", subtext: "Custom outdoor deck" },
-                { src: "/img/other2.jpg", subtext: "Bathroom tiling" },
-              ];
-              break;
-          }
-
-          galleryContainer.innerHTML = `
-        <div class="gallery-content">
-            <span class="gallery-close">&times;</span>
-            <div class="gallery-scroll">
-                ${galleryImages
-                  .map(
-                    (image) => `
-                    <div class="gallery-slide">
-                        <img src="${image.src}" alt="">
-                        <div class="gallery-subtext">${image.subtext}</div>
-                    </div>
-                `
-                  )
-                  .join("")}
-            </div>
-            <button class="gallery-prev">&lt;</button>
-            <button class="gallery-next">&gt;</button>
-        </div>
-    `;
-
-          const galleryScroll =
-            galleryContainer.querySelector(".gallery-scroll");
-          const slides = galleryScroll.querySelectorAll(".gallery-slide");
-          let currentIndex = 0;
-
-          function updateGalleryPosition() {
-            console.log(`Updating gallery position to index: ${currentIndex}`);
-            const offset = -currentIndex * galleryScroll.clientWidth;
-            galleryScroll.style.transform = `translateX(${offset}px)`;
-          }
-
-          // Handle navigation buttons with looping
-          galleryContainer
-            .querySelector(".gallery-next")
-            .addEventListener("click", () => {
-              console.log("Next button clicked");
-              currentIndex = (currentIndex + 1) % slides.length; // Loop around
-              updateGalleryPosition();
-            });
-
-          galleryContainer
-            .querySelector(".gallery-prev")
-            .addEventListener("click", () => {
-              console.log("Previous button clicked");
-              currentIndex = (currentIndex - 1 + slides.length) % slides.length; // Loop around
-              updateGalleryPosition();
-            });
-
-          // Handle swipe detection for mobile with looping
-          let startX,
-            isSwiping = false;
-
-          galleryScroll.addEventListener("touchstart", (e) => {
-            startX = e.touches[0].clientX;
-            isSwiping = true;
-            console.log("Touch start detected");
-          });
-
-          galleryScroll.addEventListener(
-            "touchmove",
-            (e) => {
-              if (!isSwiping) return;
-              const touchX = e.touches[0].clientX;
-              const deltaX = touchX - startX;
-
-              if (deltaX > 50) {
-                console.log("Swipe detected: moving to previous slide");
-                currentIndex =
-                  (currentIndex - 1 + slides.length) % slides.length; // Loop around
-                updateGalleryPosition();
-                isSwiping = false;
-              } else if (deltaX < -50) {
-                console.log("Swipe detected: moving to next slide");
-                currentIndex = (currentIndex + 1) % slides.length; // Loop around
-                updateGalleryPosition();
-                isSwiping = false;
-              }
-            },
-            { passive: true }
-          );
-
-          // Ensure the "X" button works after touch events
-          const closeButton = galleryContainer.querySelector(".gallery-close");
-
-          closeButton.addEventListener("click", (e) => {
-            e.stopPropagation();
-            console.log("Close button clicked");
-            galleryContainer.classList.add("fade-out");
-            setTimeout(() => {
-              galleryContainer.remove();
-              console.log("Gallery closed via fade-out");
-            }, 500);
-          });
-
-          galleryScroll.addEventListener("touchend", () => {
-            isSwiping = false;
-            console.log("Touch end detected, swipe state reset");
-          });
-        }
       });
-
-      // Add CSS for the popup gallery
-      const style = document.createElement("style");
-      style.textContent = `
-.gallery-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-}
-
-.gallery-content {
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-    text-align: center;
-    overflow: hidden;
-}
-
-.gallery-scroll {
-    display: flex;
-    transition: transform 0.5s ease;
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
-}
-
-.gallery-scroll::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
-}
-
-.gallery-slide {
-    flex: 0 0 100%; /* Each slide takes full width */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.gallery-slide img {
-    max-width: 100%;
-    max-height: 80vh;
-    border-radius: 8px;
-}
-
-.gallery-subtext {
-    color: white;
-    margin-top: 10px;
-}
-
-.gallery-close {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 10001; /* Ensure the close button is above other elements */
-}
-
-.gallery-prev,
-.gallery-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.5);
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10001;
-}
-
-.gallery-prev {
-    left: 10px;
-}
-
-.gallery-next {
-    right: 10px;
-}
-`;
-      document.head.appendChild(style);
     </script>
+
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Hamburger Menu Toggle
-        const menuIcon = document.querySelector(".menu-icon");
-        const menu = document.querySelector(".menu");
+      // Hamburger Menu Toggle
+      const menuIcon = document.querySelector(".menu-icon");
+      const menu = document.querySelector(".menu");
 
-        menuIcon.addEventListener("click", () => {
-          menu.classList.toggle("active");
-        });
+      menuIcon.addEventListener("click", () => {
+        menu.classList.toggle("active");
+      });
 
-        // Close menu when clicking a link (for mobile)
-        document.querySelectorAll("nav .menu a").forEach((link) => {
-          link.addEventListener("click", () => {
-            if (menu.classList.contains("active")) {
-              menu.classList.remove("active");
-            }
-          });
-        });
-
-        // Smooth Scroll
-        document.querySelectorAll("nav .menu a, .logo a").forEach((anchor) => {
-          anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-
-            const targetId = this.getAttribute("href").substring(1);
-
-            if (targetId === "" || targetId === "home") {
-              // Scroll to the top if "Home" or the logo is clicked
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            } else {
-              // Calculate the offset for other sections
-              const targetSection = document.getElementById(targetId);
-              const offset = 70; // Adjust this value to set the space above the section
-              const elementPosition =
-                targetSection.getBoundingClientRect().top +
-                window.scrollY -
-                offset;
-
-              window.scrollTo({
-                top: elementPosition,
-                behavior: "smooth",
-              });
-            }
-          });
+      // Close menu when clicking a link (for mobile)
+      document.querySelectorAll("nav .menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (menu.classList.contains("active")) {
+            menu.classList.remove("active");
+          }
         });
       });
+
+      // Smooth Scroll
+      document.querySelectorAll("nav .menu a, .logo a").forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const targetId = this.getAttribute("href").substring(1);
+
+          if (targetId === "" || targetId === "home") {
+            // Scroll to the top if "Home" or the logo is clicked
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          } else {
+            // Calculate the offset for other sections
+            const targetSection = document.getElementById(targetId);
+            const offset = 70; // Adjust this value to set the space above the section
+            const elementPosition =
+              targetSection.getBoundingClientRect().top +
+              window.scrollY -
+              offset;
+
+            window.scrollTo({
+              top: elementPosition,
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+    </script>
+
+    <!-- Cookie Consent Bar -->
+    <div id="cookie-consent-bar" class="cookie-consent-bar">
+      <p>
+        Ce site utilise des cookies pour vous offrir une meilleure expérience
+        utilisateur. En utilisant notre site, vous acceptez l'utilisation de
+        cookies.
+        <button id="accept-cookies" class="cookie-consent-button">
+          Accepter
+        </button>
+      </p>
+    </div>
+
+    <script>
       document.addEventListener("DOMContentLoaded", () => {
         const cookieConsentBar = document.getElementById("cookie-consent-bar");
         const acceptCookiesButton = document.getElementById("accept-cookies");
@@ -502,49 +265,6 @@
           cookieConsentBar.style.display = "none"; // Hide the consent bar
         });
       });
-      document
-        .getElementById("contact-form")
-        .addEventListener("submit", function (e) {
-          e.preventDefault(); // Prevent default form submission
-
-          const form = e.target;
-          const data = new FormData(form);
-          const action = form.action;
-
-          fetch(action, {
-            method: "POST",
-            body: data,
-            headers: {
-              Accept: "application/json",
-            },
-          })
-            .then((response) => {
-              if (response.ok) {
-                form.reset();
-                document.getElementById("success-message").style.display =
-                  "block";
-              } else {
-                alert(
-                  "Une erreur s'est produite. Veuillez réessayer plus tard."
-                );
-              }
-            })
-            .catch((error) => {
-              alert("Une erreur s'est produite. Veuillez réessayer plus tard.");
-            });
-        });
     </script>
-
-    <!-- Cookie Consent Bar -->
-    <div id="cookie-consent-bar" class="cookie-consent-bar">
-      <p>
-        Ce site utilise des cookies pour vous offrir une meilleure expérience
-        utilisateur. En utilisant notre site, vous acceptez l'utilisation de
-        cookies.
-        <button id="accept-cookies" class="cookie-consent-button">
-          Accepter
-        </button>
-      </p>
-    </div>
   </body>
 </html>
