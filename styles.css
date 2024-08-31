@@ -6,7 +6,6 @@ body {
   background-color: #f5f5f5;
   color: #333;
 }
-
 h1,
 h2,
 h3,
@@ -29,10 +28,10 @@ li {
   padding: 20px 0;
 }
 
-/* Navbar Styles */
+/* General Navbar Styles */
 nav {
   background-color: #155d38;
-  padding: 5px 0;
+  padding: 5px 0; /* Reduced padding */
   position: sticky;
   top: 0;
   width: 100%;
@@ -46,7 +45,59 @@ nav .container {
 }
 
 nav .logo img {
-  height: 60px;
+  height: 40px; /* Keep the logo height as it was */
+  width: auto;
+}
+
+nav .menu a {
+  color: #ecf0f1;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 18px;
+  line-height: 50px; /* Align text vertically with the logo */
+}
+
+nav .menu-icon {
+  display: none;
+  font-size: 30px;
+  color: #ecf0f1;
+  cursor: pointer;
+  line-height: 50px; /* Align hamburger icon vertically with the logo */
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  nav .menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100%;
+    width: 250px;
+    background-color: #155d38;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 50px 20px;
+    transition: right 0.3s ease-in-out;
+  }
+
+  nav .menu a {
+    margin: 20px 0;
+    font-size: 20px;
+    line-height: normal; /* Reset line-height for mobile */
+  }
+
+  nav .menu-icon {
+    display: block;
+  }
+
+  .menu.active {
+    right: 0;
+  }
+}
+
+/* Logo Styling */
+nav .logo img {
+  height: 60px; /* Adjust this value to control the logo size */
   width: auto;
 }
 
@@ -60,14 +111,13 @@ nav .menu a {
   text-decoration: none;
   margin-left: 20px;
   font-size: 18px;
-  line-height: 50px;
 }
 
 nav .menu a:hover {
   color: #3498db;
 }
 
-/* Responsive Navbar */
+/* Hamburger Menu Icon */
 .menu-icon {
   display: none;
   cursor: pointer;
@@ -75,9 +125,10 @@ nav .menu a:hover {
 
 .hamburger-icon {
   font-size: 30px;
-  color: #ecf0f1;
+  color: #ecf0f1; /* White color for the icon */
 }
 
+/* Responsive Navbar */
 @media (max-width: 768px) {
   .menu {
     position: fixed;
@@ -85,7 +136,7 @@ nav .menu a:hover {
     right: -100%;
     height: 100%;
     width: 250px;
-    background-color: #155d38;
+    background-color: #155d38; /* Updated color */
     flex-direction: column;
     align-items: flex-start;
     padding: 50px 20px;
@@ -111,8 +162,8 @@ nav .menu a:hover {
   background-image: url("/img/hero.jpg");
   background-size: cover;
   background-position: center;
-  height: 60vh;
-  max-height: 600px;
+  height: 60vh; /* Adjust this value to control the max height */
+  max-height: 600px; /* Maximum height constraint */
   position: relative;
   display: flex;
   align-items: center;
@@ -129,7 +180,7 @@ nav .menu a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for readability */
   z-index: 1;
 }
 
@@ -148,6 +199,7 @@ nav .menu a:hover {
   margin-bottom: 0;
 }
 
+/* Responsive Hero Text */
 @media (max-width: 768px) {
   .hero h1 {
     font-size: 36px;
@@ -156,10 +208,29 @@ nav .menu a:hover {
   .hero p {
     font-size: 18px;
   }
+}
 
-  .hero {
-    padding-bottom: 10px;
-  }
+/* Carousel */
+.carousel {
+  position: relative;
+  overflow: hidden;
+  margin: 50px 0;
+}
+
+.carousel-images {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* About Section */
@@ -173,21 +244,21 @@ nav .menu a:hover {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: row; /* Default to row for large screens */
 }
 
 .about-image {
   flex: 1;
   display: flex;
-  justify-content: center;
-  max-width: 50%;
+  justify-content: center; /* Center the image horizontally */
+  max-width: 50%; /* Ensure the image doesn't take up too much space on large screens */
 }
 
 .about-image img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 677px;
+  width: auto; /* Maintain natural width */
+  height: auto; /* Maintain natural height */
+  max-width: 100%; /* Ensure it doesn’t exceed its container width */
+  max-height: 677px; /* Ensure it doesn’t exceed its natural height */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -195,7 +266,7 @@ nav .menu a:hover {
 .about-text {
   flex: 1;
   margin-right: 20px;
-  max-width: 50%;
+  max-width: 50%; /* Ensure the text doesn't take up too much space on large screens */
 }
 
 .about-text h2 {
@@ -209,31 +280,68 @@ nav .menu a:hover {
   margin-bottom: 15px;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .about-content {
-    flex-direction: column;
+    flex-direction: column; /* Stack text and image vertically on mobile */
   }
 
   .about-text {
     margin-right: 0;
-    margin-bottom: 20px;
-    text-align: left;
-    max-width: 90%;
+    margin-bottom: 20px; /* Add space between text and image on mobile */
+    text-align: left; /* Align text to the left on mobile */
+    max-width: 90%; /* Make the text box wider */
     margin-left: auto;
-    margin-right: auto;
+    margin-right: auto; /* Center the text block horizontally */
   }
 
   .about-image {
     text-align: center;
-    max-width: 100%;
+    max-width: 100%; /* Ensure the image uses full width on mobile */
   }
 
   .about-image img {
-    max-height: none;
+    max-height: none; /* Remove the height restriction for smaller screens */
   }
 }
 
-/* Gallery Section */
+/* Services Section */
+.services {
+  padding: 50px 0;
+  text-align: center;
+}
+
+.services h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.services-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.service-item {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.service-item h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.service-item p {
+  font-size: 16px;
+}
+
+/* General Gallery Section */
 .gallery {
   padding: 50px 0;
   text-align: center;
@@ -249,7 +357,7 @@ nav .menu a:hover {
 .gallery-item {
   position: relative;
   width: 30%;
-  padding-top: 30%;
+  padding-top: 30%; /* This makes the item square */
   margin-bottom: 20px;
 }
 
@@ -263,7 +371,7 @@ nav .menu a:hover {
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: filter 0.3s ease;
-  filter: brightness(1.1);
+  filter: brightness(1.1); /* Brighter image by default */
 }
 
 .gallery-overlay {
@@ -272,72 +380,66 @@ nav .menu a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0); /* Start with transparent background */
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 24px;
-  opacity: 0;
+  opacity: 0; /* Hidden initially */
   transition: background-color 0.3s ease, opacity 0.3s ease;
   border-radius: 8px;
-  z-index: 2;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 2; /* Ensure it's above the image */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Drop shadow for readability */
 }
 
+/* Hover Effects for Desktop */
 .gallery-link:hover img {
-  filter: brightness(0.7);
+  filter: brightness(0.7); /* Darken image on hover */
 }
 
 .gallery-link:hover .gallery-overlay {
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.5); /* Darken background on hover */
+  opacity: 1; /* Show overlay text */
 }
 
-/* Mobile Styles */
+/* Mobile Styles - Minimal Darkening and Text Drop Shadow */
 @media (max-width: 768px) {
   .gallery-item img {
-    filter: brightness(0.95);
+    filter: brightness(0.95); /* Very slight darkening effect */
   }
 
   .gallery-overlay {
-    background-color: rgba(0, 0, 0, 0.2);
-    opacity: 1 !important;
+    background-color: rgba(0, 0, 0, 0.2); /* Even lighter dark background */
+    opacity: 1 !important; /* Ensure the overlay text is always visible */
   }
+}
 
+/* Responsive Design */
+@media (max-width: 768px) {
   .gallery-item {
     width: 45%;
-    padding-top: 45%;
-  }
-
-  .gallery {
-    padding-top: 20px;
+    padding-top: 45%; /* Maintain square shape */
   }
 }
 
 @media (max-width: 480px) {
   .gallery-item {
     width: 100%;
-    padding-top: 100%;
+    padding-top: 100%; /* Maintain square shape */
   }
 }
 
-/* Contact Section */
-.contact {
-  background-color: #ecf0f1;
-  padding: 50px 0;
-  text-align: center;
-}
-
-.contact h2 {
-  font-size: 36px;
-  margin-bottom: 20px;
-}
-
+/* Contact Information Styling */
 .contact-info {
   margin-bottom: 30px;
-  text-align: center;
+  text-align: center; /* Aligns the text to the left */
   color: #333;
+}
+
+.contact-info h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
 }
 
 .contact-info p {
@@ -353,11 +455,22 @@ nav .menu a:hover {
 .contact-info a:hover {
   text-decoration: underline;
 }
+/* Contact Section */
+.contact {
+  background-color: #ecf0f1;
+  padding: 50px 0;
+  text-align: center;
+}
+
+.contact h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
 
 .contact form {
   max-width: 100%;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 20px; /* Add padding for small screens */
   box-sizing: border-box;
   margin: 0 auto;
 }
@@ -375,8 +488,8 @@ nav .menu a:hover {
 
 .contact input,
 .contact textarea {
-  width: 100%;
-  max-width: 100%;
+  width: 100%; /* Make the input fields responsive */
+  max-width: 100%; /* Ensure the input fields do not exceed the screen width */
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -394,7 +507,7 @@ nav .menu a:hover {
   cursor: pointer;
   margin-top: 10px;
   width: 100%;
-  max-width: 300px;
+  max-width: 300px; /* Ensure the button does not exceed a reasonable width */
   box-sizing: border-box;
 }
 
@@ -402,6 +515,7 @@ nav .menu a:hover {
   background-color: #3498db;
 }
 
+/* Adjustments for Mobile Devices */
 @media (max-width: 768px) {
   .contact form {
     padding: 0 10px;
@@ -426,10 +540,19 @@ footer {
   padding: 20px 0;
 }
 
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   nav .menu a {
     margin-left: 10px;
     font-size: 16px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .hero p {
+    font-size: 18px;
   }
 
   .services-list {
@@ -443,6 +566,10 @@ footer {
   .carousel-item {
     min-width: 100%;
   }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Language Switcher as a Link */
@@ -455,4 +582,14 @@ nav .language-switcher {
 
 nav .language-switcher:hover {
   color: #3498db;
+}
+/* Adjust spacing between sections on mobile */
+@media (max-width: 768px) {
+  .hero {
+    padding-bottom: 10px; /* Reduce padding at the bottom of the hero section */
+  }
+
+  .gallery {
+    padding-top: 20px; /* Reduce padding at the top of the gallery section */
+  }
 }
