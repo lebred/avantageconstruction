@@ -187,102 +187,137 @@
                     break;
             }
 
-            let currentIndex = 0;
+            let thumbnailsHtml = '';
+            galleryImages.forEach((image, index) => {
+                thumbnailsHtml += `
+            <div class="thumbnail-item" data-index="${index}">
+                <img src="${image.src}" alt="Thumbnail">
+            </div>
+        `;
+            });
 
-            function showImage(index) {
-                galleryContainer.innerHTML = `
+            galleryContainer.innerHTML = `
         <div class="gallery-content">
             <span class="gallery-close">&times;</span>
-            <img src="${galleryImages[index].src}" alt="">
-            <div class="gallery-subtext">${galleryImages[index].subtext}</div>
-            <button class="gallery-prev">&lt;</button>
-            <button class="gallery-next">&gt;</button>
+            <div class="gallery-main">
+                <img src="${galleryImages[0].src}" alt="">
+                <div class="gallery-subtext">${galleryImages[0].subtext}</div>
+                <button class="gallery-prev">&lt;</button>
+                <button class="gallery-next">&gt;</button>
+            </div>
+            <div class="gallery-thumbnails">
+                ${thumbnailsHtml}
+            </div>
         </div>
     `;
-                attachGalleryEventListeners();
+
+            let currentIndex = 0;
+
+            const mainImage = galleryContainer.querySelector('.gallery-main img');
+            const subtext = galleryContainer.querySelector('.gallery-subtext');
+            const thumbnails = galleryContainer.querySelectorAll('.thumbnail-item');
+
+            function updateGallery(index) {
+                mainImage.src = galleryImages[index].src;
+                subtext.textContent = galleryImages[index].subtext;
+                currentIndex = index;
+
+                thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                thumbnails[currentIndex].classList.add('active');
             }
 
-            function attachGalleryEventListeners() {
-                galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
-                    currentIndex = (currentIndex + 1) % galleryImages.length;
-                    showImage(currentIndex);
-                });
+            galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % galleryImages.length;
+                updateGallery(currentIndex);
+            });
 
-                galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
-                    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-                    showImage(currentIndex);
-                });
+            galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+                updateGallery(currentIndex);
+            });
 
-                galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
-                    document.body.removeChild(galleryContainer);
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function () {
+                    const index = parseInt(this.dataset.index, 10);
+                    updateGallery(index);
                 });
-            }
+            });
 
-            showImage(currentIndex);
+            galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
+                document.body.removeChild(galleryContainer);
+            });
+
+            // Add fade-in animation for gallery popup
+            galleryContainer.style.opacity = 0;
+            setTimeout(() => {
+                galleryContainer.style.opacity = 1;
+            }, 10);
         }
+
+
 
 
         // Add CSS for the popup gallery
         const style = document.createElement('style');
         style.textContent = `
-    .gallery-popup {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-    }
+.gallery-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
 
-    .gallery-content {
-        position: relative;
-        max-width: 90%;
-        max-height: 90%;
-        text-align: center;
-    }
+.gallery-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
 
-    .gallery-content img {
-        max-width: 100%;
-        max-height: 100%;
-        border-radius: 8px;
-    }
+.gallery-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 10px;
+  padding: 20px 0;
+}
 
-    .gallery-subtext {
-        color: white;
-        margin-top: 10px;
-    }
+.gallery-scroll-container .gallery-item {
+  scroll-snap-align: start;
+  min-width: 100%;
+  flex-shrink: 0;
+}
 
-    .gallery-close {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 30px;
-        color: white;
-        cursor: pointer;
-    }
+.gallery-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 8px;
+}
 
-    .gallery-prev,
-    .gallery-next {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(255, 255, 255, 0.5);
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-    }
+.gallery-subtext {
+  color: white;
+  margin-top: 10px;
+}
 
-    .gallery-prev {
-        left: 10px;
-    }
+.gallery-close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
 
-    .gallery-next {
-        right: 10px;
-    }
 `;
         document.head.appendChild(style);
 
@@ -378,12 +413,10 @@
                     break;
             }
 
-            console.log("Gallery Images Loaded:", galleryImages); // Debug log
 
             let currentIndex = 0;
 
             function showImage(index) {
-                console.log("Showing image at index:", index); // Debug log
 
                 galleryContainer.innerHTML = `
     <div class="gallery-content">
