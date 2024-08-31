@@ -116,13 +116,13 @@
                 <div class="gallery-item">
                     <a href="#" data-gallery="commercial" class="gallery-link">
                         <div class="gallery-overlay">Commercial</div>
-                        <img src="/img/commercial-thumbnail.jpg" alt="Commercial">
+                        <img src="/img/residential-thumbnail.webp" alt="Commercial">
                     </a>
                 </div>
                 <div class="gallery-item">
                     <a href="#" data-gallery="other" class="gallery-link">
                         <div class="gallery-overlay">Autres réalisations</div>
-                        <img src="/img/other-thumbnail.jpg" alt="Autres réalisations">
+                        <img src="/img/residential-thumbnail.webp" alt="Autres réalisations">
                     </a>
                 </div>
             </div>
@@ -336,11 +336,11 @@
             link.addEventListener('click', function (e) {
                 e.preventDefault(); // Prevent the default action (scrolling to top)
                 const galleryType = this.dataset.gallery;
-                loadGallery(galleryType);
+                openGallery(galleryType);
             });
         });
 
-        function loadGallery(type) {
+        function openGallery(type) {
             const galleryContainer = document.createElement('div');
             galleryContainer.classList.add('gallery-popup');
             document.body.appendChild(galleryContainer);
@@ -350,21 +350,19 @@
                 case 'residential':
                     galleryImages = [
                         { src: '/img/residential1.webp', subtext: 'Living room renovation' },
-                        { src: '/img/residential2.webp', subtext: 'Kitchen makeover' },
+                        { src: '/img/residential2.webp', subtext: 'Kitchen makeover' }
                     ];
                     break;
                 case 'commercial':
                     galleryImages = [
                         { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
-                        { src: '/img/commercial2.jpg', subtext: 'Retail store interior' },
-                        { src: '/img/commercial3.jpg', subtext: 'Conference room setup' }
+                        { src: '/img/commercial2.jpg', subtext: 'Retail store interior' }
                     ];
                     break;
                 case 'other':
                     galleryImages = [
                         { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
-                        { src: '/img/other2.jpg', subtext: 'Bathroom tiling' },
-                        { src: '/img/other3.jpg', subtext: 'Garden landscaping' }
+                        { src: '/img/other2.jpg', subtext: 'Bathroom tiling' }
                     ];
                     break;
             }
@@ -462,7 +460,8 @@
         right: 10px;
     }
 `;
-        document.head.appendChild(style);
+        document.head.appendChild(sty
+
 
 
 
