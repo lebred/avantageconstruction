@@ -336,11 +336,14 @@
             link.addEventListener('click', function (e) {
                 e.preventDefault(); // Prevent the default action (scrolling to top)
                 const galleryType = this.dataset.gallery;
+                console.log("Gallery Type Clicked:", galleryType); // Debug log
                 openGallery(galleryType);
             });
         });
 
         function openGallery(type) {
+            console.log("Opening gallery for:", type); // Debug log
+
             const galleryContainer = document.createElement('div');
             galleryContainer.classList.add('gallery-popup');
             document.body.appendChild(galleryContainer);
@@ -367,9 +370,13 @@
                     break;
             }
 
+            console.log("Gallery Images Loaded:", galleryImages); // Debug log
+
             let currentIndex = 0;
 
             function showImage(index) {
+                console.log("Showing image at index:", index); // Debug log
+
                 galleryContainer.innerHTML = `
             <div class="gallery-content">
                 <span class="gallery-close">&times;</span>
@@ -461,7 +468,6 @@
     }
 `;
         document.head.appendChild(style);
-
 
 
 
