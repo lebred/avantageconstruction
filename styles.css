@@ -341,7 +341,7 @@ nav .menu a:hover {
   font-size: 16px;
 }
 
-/* Gallery Section */
+/* General Gallery Section */
 .gallery {
   padding: 50px 0;
   text-align: center;
@@ -392,6 +392,7 @@ nav .menu a:hover {
   z-index: 2; /* Ensure it's above the image */
 }
 
+/* Hover Effects for Desktop */
 .gallery-link:hover img {
   filter: brightness(0.7); /* Darken image on hover */
 }
@@ -399,6 +400,18 @@ nav .menu a:hover {
 .gallery-link:hover .gallery-overlay {
   background-color: rgba(0, 0, 0, 0.5); /* Darken background on hover */
   opacity: 1; /* Show overlay text */
+}
+
+/* Mobile Styles - Always Show Overlay Text */
+@media (max-width: 768px) {
+  .gallery-item img {
+    filter: brightness(0.7); /* Slightly darken the image by default */
+  }
+
+  .gallery-overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Darker background by default */
+    opacity: 1; /* Always show the overlay text */
+  }
 }
 
 /* Responsive Design */
