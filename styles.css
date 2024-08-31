@@ -370,6 +370,8 @@ nav .menu a:hover {
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: filter 0.3s ease;
+  filter: brightness(1.1); /* Brighter image by default */
 }
 
 .gallery-overlay {
@@ -378,19 +380,25 @@ nav .menu a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0); /* Start with transparent background */
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 24px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  opacity: 0; /* Hidden initially */
+  transition: background-color 0.3s ease, opacity 0.3s ease;
   border-radius: 8px;
+  z-index: 2; /* Ensure it's above the image */
+}
+
+.gallery-link:hover img {
+  filter: brightness(0.7); /* Darken image on hover */
 }
 
 .gallery-link:hover .gallery-overlay {
-  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.5); /* Darken background on hover */
+  opacity: 1; /* Show overlay text */
 }
 
 /* Responsive Design */
