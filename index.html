@@ -291,27 +291,27 @@
 
     </script>
     <script>
-        <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Hamburger Menu Toggle
-        const menuIcon = document.querySelector('.menu-icon');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hamburger Menu Toggle
+            const menuIcon = document.querySelector('.menu-icon');
             const menu = document.querySelector('.menu');
 
-        menuIcon.addEventListener('click', () => {
+            menuIcon.addEventListener('click', () => {
                 menu.classList.toggle('active');
-        });
+            });
 
-        // Close menu when clicking a link (for mobile)
-        document.querySelectorAll('nav .menu a').forEach(link => {
+            // Close menu when clicking a link (for mobile)
+            document.querySelectorAll('nav .menu a').forEach(link => {
                 link.addEventListener('click', () => {
                     if (menu.classList.contains('active')) {
                         menu.classList.remove('active');
                     }
                 });
-        });
+            });
 
-        // Smooth Scroll
-        document.querySelectorAll('nav .menu a').forEach(anchor => {
+            // Smooth Scroll
+            document.querySelectorAll('nav .menu a').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
 
@@ -330,8 +330,8 @@
                         });
                     }
                 });
+            });
         });
-    });
     </script>
 
 
