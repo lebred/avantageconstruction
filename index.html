@@ -28,7 +28,6 @@
                 <a href="#">Accueil</a>
                 <a href="#gallery">Réalisations</a>
                 <a href="#about">Notre mission</a>
-                <a href="#services">Services</a>
                 <a href="#contact">Contact</a>
                 <!-- <a href="#" class="language-switcher">Français</a> -->
             </div>
@@ -311,21 +310,21 @@
             });
 
             // Smooth Scroll
-            document.querySelectorAll('nav .menu a').forEach(anchor => {
+            document.querySelectorAll('nav .menu a, .logo a').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
 
                     const targetId = this.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
 
-                    if (targetId === "home") {
-                        // Scroll to the top if "Home" is clicked
+                    if (targetId === "" || targetId === "home") {
+                        // Scroll to the top if "Home" or the logo is clicked
                         window.scrollTo({
                             top: 0,
                             behavior: 'smooth'
                         });
                     } else {
-                        // Calculate the offset
+                        // Calculate the offset for other sections
+                        const targetSection = document.getElementById(targetId);
                         const offset = 70; // Adjust this value to set the space above the section
                         const elementPosition = targetSection.getBoundingClientRect().top + window.scrollY - offset;
 
@@ -336,6 +335,7 @@
                     }
                 });
             });
+
 
         });
     </script>
