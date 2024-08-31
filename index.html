@@ -303,11 +303,18 @@
 
                 // Close the gallery when the "X" button is clicked
                 const closeButton = galleryContainer.querySelector('.gallery-close');
-                closeButton.addEventListener('click', function () {
+                closeButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     console.log("Close button clicked");
-                    galleryContainer.remove(); // Remove the gallery from the DOM
-                    console.log("Gallery closed via X button");
+
+                    // Add fade-out effect before removing the gallery
+                    galleryContainer.classList.add('fade-out');
+                    setTimeout(() => {
+                        galleryContainer.remove();
+                        console.log("Gallery closed via fade-out");
+                    }, 500); // Match the duration of the fade-out animation
                 });
+
 
                 // Reset swipe state after touch ends
                 galleryScroll.addEventListener('touchend', () => {

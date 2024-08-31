@@ -616,3 +616,16 @@ nav .language-switcher:hover {
   opacity: 0; /* Start with opacity 0 for fade-in */
   animation: fadeIn 0.5s forwards; /* Fade-in animation */
 }
+/* Fade-Out Animation */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
