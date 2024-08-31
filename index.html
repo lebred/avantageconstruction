@@ -132,6 +132,41 @@
     </footer>
 
     <script>
+        // Lazy load function to set the actual image source
+        function lazyLoadImage(image, src) {
+            if (!image.src) {
+                image.src = src;
+            }
+        }
+
+        // Lazy loading observer
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('.lazy-load');
+            const options = {
+                root: null, // Use the viewport as the container
+                rootMargin: '0px',
+                threshold: 0.1 // Image must be 10% visible before loading
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const src = img.getAttribute('data-src');
+                        lazyLoadImage(img, src);
+                        observer.unobserve(img); // Stop observing after loading
+                    }
+                });
+            }, options);
+
+            images.forEach(image => {
+                observer.observe(image);
+            });
+        }
+
+        // Call this function after the gallery is created
+        lazyLoadImages();
+
         // Carousel Auto Movement
         const carouselImages = document.querySelector('.carousel-images');
         if (carouselImages) {
@@ -187,39 +222,43 @@
                     break;
             }
 
-            let currentIndex = 0;
-
-            function showImage(index) {
-                galleryContainer.innerHTML = `
+            galleryContainer.innerHTML = `
         <div class="gallery-content">
             <span class="gallery-close">&times;</span>
-            <img src="${galleryImages[index].src}" alt="">
-            <div class="gallery-subtext">${galleryImages[index].subtext}</div>
+            <img data-src="${galleryImages[0].src}" alt="" class="lazy-load">
+            <div class="gallery-subtext">${galleryImages[0].subtext}</div>
             <button class="gallery-prev">&lt;</button>
             <button class="gallery-next">&gt;</button>
         </div>
     `;
-                attachGalleryEventListeners();
+
+            let currentIndex = 0;
+            const mainImage = galleryContainer.querySelector('.gallery-content img');
+            const subtext = galleryContainer.querySelector('.gallery-subtext');
+
+            function updateGallery(index) {
+                lazyLoadImage(mainImage, galleryImages[index].src);
+                subtext.textContent = galleryImages[index].subtext;
+                currentIndex = index;
             }
 
-            function attachGalleryEventListeners() {
-                galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
-                    currentIndex = (currentIndex + 1) % galleryImages.length;
-                    showImage(currentIndex);
-                });
+            galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % galleryImages.length;
+                updateGallery(currentIndex);
+            });
 
-                galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
-                    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-                    showImage(currentIndex);
-                });
+            galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+                updateGallery(currentIndex);
+            });
 
-                galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
-                    document.body.removeChild(galleryContainer);
-                });
-            }
+            galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
+                document.body.removeChild(galleryContainer);
+            });
 
-            showImage(currentIndex);
+            lazyLoadImages(); // Call lazy load after setting up the gallery
         }
+
 
 
         // Add CSS for the popup gallery
