@@ -390,6 +390,7 @@ nav .menu a:hover {
   transition: background-color 0.3s ease, opacity 0.3s ease;
   border-radius: 8px;
   z-index: 2; /* Ensure it's above the image */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Drop shadow for readability */
 }
 
 /* Hover Effects for Desktop */
@@ -402,14 +403,14 @@ nav .menu a:hover {
   opacity: 1; /* Show overlay text */
 }
 
-/* Mobile Styles - Lighten the Darkening Effect */
+/* Mobile Styles - Minimal Darkening and Text Drop Shadow */
 @media (max-width: 768px) {
   .gallery-item img {
-    filter: brightness(0.85); /* Lightly darken the image by default */
+    filter: brightness(0.95); /* Very slight darkening effect */
   }
 
   .gallery-overlay {
-    background-color: rgba(0, 0, 0, 0.3); /* Lighten the dark background */
+    background-color: rgba(0, 0, 0, 0.2); /* Even lighter dark background */
     opacity: 1 !important; /* Ensure the overlay text is always visible */
   }
 }
