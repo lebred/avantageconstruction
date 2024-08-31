@@ -644,7 +644,10 @@ nav .language-switcher:hover {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  /* Ensure padding is included in the width */
+  overflow: hidden;
+  /* Prevent any overflow issues */
 }
 
 .cookie-consent-bar p {
