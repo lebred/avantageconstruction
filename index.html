@@ -42,32 +42,34 @@
         </div>
     </section>
 
-<!-- Gallery Section -->
-<section id="gallery" class="gallery">
-    <div class="container">
-        <h2>Réalisations</h2>
-        <div class="gallery-links">
-            <div class="gallery-item">
-                <a href="#" data-gallery="residential" class="gallery-link">
-                    <div class="gallery-overlay">Résidentiel</div>
-                    <img src="/img/residential-thumbnail.webp" alt="Résidentiel">
-                </a>
-            </div>
-            <div class="gallery-item">
-                <a href="#" data-gallery="commercial" class="gallery-link">
-                    <div class="gallery-overlay">Commercial</div>
-                    <img src="/img/commercial-thumbnail.webp" alt="Commercial">
-                </a>
-            </div>
-            <div class="gallery-item">
-                <a href="#" data-gallery="other" class="gallery-link">
-                    <div class="gallery-overlay">Autres réalisations</div>
-                    <img src="/img/autres-realisations-thumbnail.webp" alt="Autres réalisations">
-                </a>
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <h2>Réalisations</h2>
+            <div class="gallery-links">
+                <div class="gallery-item">
+                    <a href="#" data-gallery="residential" class="gallery-link">
+                        <div class="gallery-overlay">Résidentiel</div>
+                        <img src="/img/residential-thumbnail.webp" alt="Résidentiel">
+                    </a>
+                </div>
+                <div class="gallery-item">
+                    <a href="#" data-gallery="commercial" class="gallery-link">
+                        <div class="gallery-overlay">Commercial</div>
+                        <img src="/img/commercial-thumbnail.webp" alt="Commercial">
+                    </a>
+                </div>
+                <div class="gallery-item">
+                    <a href="#" data-gallery="other" class="gallery-link">
+                        <div class="gallery-overlay">Autres réalisations</div>
+                        <img src="/img/autres-realisations-thumbnail.webp" alt="Autres réalisations">
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+
 
 
     <!-- About Section -->
@@ -188,78 +190,148 @@
         }
 
         // Popup Gallery
-        document.querySelectorAll('.gallery-link').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent the default action (scrolling to top)
-                const galleryType = this.dataset.gallery;
-                openGallery(galleryType);
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded and parsed");
+
+            // Handle opening the gallery
+            document.querySelectorAll('.gallery-link').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    const galleryType = this.dataset.gallery;
+                    console.log(`Opening gallery for type: ${galleryType}`);
+                    openGallery(galleryType);
+                });
             });
+
+            function openGallery(type) {
+                console.log(`Creating gallery for type: ${type}`);
+                const galleryContainer = document.createElement('div');
+                galleryContainer.classList.add('gallery-popup');
+                document.body.appendChild(galleryContainer);
+
+                let galleryImages = [];
+                switch (type) {
+                    case 'residential':
+                        galleryImages = [
+                            { src: '/img/residential1.webp', subtext: 'Living room renovation' },
+                            { src: '/img/residential2.webp', subtext: 'Kitchen makeover' }
+                        ];
+                        break;
+                    case 'commercial':
+                        galleryImages = [
+                            { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
+                            { src: '/img/commercial2.jpg', subtext: 'Retail store interior' }
+                        ];
+                        break;
+                    case 'other':
+                        galleryImages = [
+                            { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
+                            { src: '/img/other2.jpg', subtext: 'Bathroom tiling' }
+                        ];
+                        break;
+                }
+
+                galleryContainer.innerHTML = `
+            <div class="gallery-content">
+                <span class="gallery-close">&times;</span>
+                <div class="gallery-scroll">
+                    ${galleryImages.map(image => `
+                        <div class="gallery-slide">
+                            <img src="${image.src}" alt="">
+                            <div class="gallery-subtext">${image.subtext}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="gallery-prev">&lt;</button>
+                <button class="gallery-next">&gt;</button>
+            </div>
+        `;
+
+                const galleryScroll = galleryContainer.querySelector('.gallery-scroll');
+                const slides = galleryScroll.querySelectorAll('.gallery-slide');
+                let currentIndex = 0;
+
+                function updateGalleryPosition() {
+                    console.log(`Updating gallery position to index: ${currentIndex}`);
+                    const offset = -currentIndex * galleryScroll.clientWidth;
+                    galleryScroll.style.transform = `translateX(${offset}px)`;
+                }
+
+                // Handle navigation buttons
+                galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
+                    console.log("Next button clicked");
+                    if (currentIndex < slides.length - 1) {
+                        currentIndex++;
+                        updateGalleryPosition();
+                    }
+                });
+
+                galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
+                    console.log("Previous button clicked");
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updateGalleryPosition();
+                    }
+                });
+
+                // Handle swipe detection for mobile
+                let startX, isSwiping = false;
+
+                galleryScroll.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isSwiping = true;
+                    console.log("Touch start detected");
+                });
+
+                galleryScroll.addEventListener('touchmove', (e) => {
+                    if (!isSwiping) return;
+                    const touchX = e.touches[0].clientX;
+                    const deltaX = touchX - startX;
+
+                    if (deltaX > 50 && currentIndex > 0) {
+                        console.log("Swipe detected: moving to previous slide");
+                        currentIndex--;
+                        updateGalleryPosition();
+                        isSwiping = false;
+                    } else if (deltaX < -50 && currentIndex < slides.length - 1) {
+                        console.log("Swipe detected: moving to next slide");
+                        currentIndex++;
+                        updateGalleryPosition();
+                        isSwiping = false;
+                    }
+                }, { passive: true });
+
+                // Handle closing the gallery
+                galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
+                    console.log("Close button clicked");
+                    galleryContainer.remove();
+                    console.log("Gallery closed");
+                });
+
+                // Ensure the "X" button works after touch events
+                galleryContainer.querySelector('.gallery-close').addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    console.log("Touch end on X detected, closing gallery");
+                    galleryContainer.remove();
+                    console.log("Gallery closed via touch");
+                });
+
+                // Reset swipe state after touch ends
+                galleryContainer.addEventListener('touchend', () => {
+                    isSwiping = false;
+                    console.log("Touch end detected, swipe state reset");
+                });
+            }
         });
 
-        function openGallery(type) {
-            const galleryContainer = document.createElement('div');
-            galleryContainer.classList.add('gallery-popup');
-            document.body.appendChild(galleryContainer);
 
-            let galleryImages = [];
-            switch (type) {
-                case 'residential':
-                    galleryImages = [
-                        { src: '/img/residential1.webp', subtext: 'Living room renovation' },
-                        { src: '/img/residential2.webp', subtext: 'Kitchen makeover' }
-                    ];
-                    break;
-                case 'commercial':
-                    galleryImages = [
-                        { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
-                        { src: '/img/commercial2.jpg', subtext: 'Retail store interior' }
-                    ];
-                    break;
-                case 'other':
-                    galleryImages = [
-                        { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
-                        { src: '/img/other2.jpg', subtext: 'Bathroom tiling' }
-                    ];
-                    break;
-            }
 
-            galleryContainer.innerHTML = `
-        <div class="gallery-content">
-            <span class="gallery-close">&times;</span>
-            <img src="${galleryImages[0].src}" alt="" class="lazy-load">
-            <div class="gallery-subtext">${galleryImages[0].subtext}</div>
-            <button class="gallery-prev">&lt;</button>
-            <button class="gallery-next">&gt;</button>
-        </div>
-    `;
 
-            let currentIndex = 0;
-            const mainImage = galleryContainer.querySelector('.gallery-content img');
-            const subtext = galleryContainer.querySelector('.gallery-subtext');
 
-            function updateGallery(index) {
-                mainImage.src = galleryImages[index].src;  // Directly update the src attribute
-                subtext.textContent = galleryImages[index].subtext;
-                currentIndex = index;
-            }
 
-            galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % galleryImages.length;
-                updateGallery(currentIndex);
-            });
 
-            galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-                updateGallery(currentIndex);
-            });
 
-            galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
-                document.body.removeChild(galleryContainer);
-            });
 
-            // Initialize lazy loading for the initially loaded image
-            lazyLoadImages();
-        }
 
 
 
@@ -267,64 +339,84 @@
         // Add CSS for the popup gallery
         const style = document.createElement('style');
         style.textContent = `
-    .gallery-popup {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-    }
+.gallery-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
 
-    .gallery-content {
-        position: relative;
-        max-width: 90%;
-        max-height: 90%;
-        text-align: center;
-    }
+.gallery-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    text-align: center;
+    overflow: hidden;
+}
 
-    .gallery-content img {
-        max-width: 100%;
-        max-height: 100%;
-        border-radius: 8px;
-    }
+.gallery-scroll {
+    display: flex;
+    transition: transform 0.5s ease;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
 
-    .gallery-subtext {
-        color: white;
-        margin-top: 10px;
-    }
+.gallery-scroll::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
 
-    .gallery-close {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 30px;
-        color: white;
-        cursor: pointer;
-    }
+.gallery-slide {
+    flex: 0 0 100%; /* Each slide takes full width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
-    .gallery-prev,
-    .gallery-next {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(255, 255, 255, 0.5);
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-    }
+.gallery-slide img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 8px;
+}
 
-    .gallery-prev {
-        left: 10px;
-    }
+.gallery-subtext {
+    color: white;
+    margin-top: 10px;
+}
 
-    .gallery-next {
-        right: 10px;
-    }
+.gallery-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+}
+
+.gallery-prev,
+.gallery-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10001;
+}
+
+.gallery-prev {
+    left: 10px;
+}
+
+.gallery-next {
+    right: 10px;
+}
 `;
         document.head.appendChild(style);
 
