@@ -583,3 +583,13 @@ nav .language-switcher {
 nav .language-switcher:hover {
   color: #3498db;
 }
+/* Adjust spacing between sections on mobile */
+@media (max-width: 768px) {
+  .hero {
+    padding-bottom: 10px; /* Reduce padding at the bottom of the hero section */
+  }
+
+  .gallery {
+    padding-top: 20px; /* Reduce padding at the top of the gallery section */
+  }
+}
