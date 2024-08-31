@@ -225,7 +225,7 @@
             galleryContainer.innerHTML = `
         <div class="gallery-content">
             <span class="gallery-close">&times;</span>
-            <img data-src="${galleryImages[0].src}" alt="" class="lazy-load">
+            <img src="${galleryImages[0].src}" alt="" class="lazy-load">
             <div class="gallery-subtext">${galleryImages[0].subtext}</div>
             <button class="gallery-prev">&lt;</button>
             <button class="gallery-next">&gt;</button>
@@ -237,7 +237,7 @@
             const subtext = galleryContainer.querySelector('.gallery-subtext');
 
             function updateGallery(index) {
-                lazyLoadImage(mainImage, galleryImages[index].src);
+                mainImage.src = galleryImages[index].src;  // Directly update the src attribute
                 subtext.textContent = galleryImages[index].subtext;
                 currentIndex = index;
             }
@@ -256,8 +256,10 @@
                 document.body.removeChild(galleryContainer);
             });
 
-            lazyLoadImages(); // Call lazy load after setting up the gallery
+            // Initialize lazy loading for the initially loaded image
+            lazyLoadImages();
         }
+
 
 
 
