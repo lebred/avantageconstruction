@@ -291,186 +291,187 @@
 
     </script>
     <script>
-        // Smooth Scroll
-        document.querySelectorAll('nav .menu a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                const targetId = this.getAttribute('href').substring(1);
-
-                if (targetId === "") {
-                    // Scroll to the top if "Home" is clicked
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    const targetSection = document.getElementById(targetId);
-
-                    window.scrollTo({
-                        top: targetSection.offsetTop - 50, // Adjust offset if needed
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
         // Hamburger Menu Toggle
         const menuIcon = document.querySelector('.menu-icon');
-        const menu = document.querySelector('.menu');
+            const menu = document.querySelector('.menu');
 
         menuIcon.addEventListener('click', () => {
-            menu.classList.toggle('active');
+                menu.classList.toggle('active');
         });
 
         // Close menu when clicking a link (for mobile)
         document.querySelectorAll('nav .menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (menu.classList.contains('active')) {
-                    menu.classList.remove('active');
-                }
-            });
+                link.addEventListener('click', () => {
+                    if (menu.classList.contains('active')) {
+                        menu.classList.remove('active');
+                    }
+                });
         });
 
+        // Smooth Scroll
+        document.querySelectorAll('nav .menu a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
 
-        // Lazy loading for gallery images
-        document.querySelectorAll('.gallery-link').forEach(link => {
-            link.addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent the default action (scrolling to top)
-                const galleryType = this.dataset.gallery;
-                console.log("Gallery Type Clicked:", galleryType); // Debug log
-                openGallery(galleryType);
-            });
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+
+                    if (targetId === "") {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 50, // Adjust offset if needed
+                            behavior: 'smooth'
+                        });
+                    }
+                });
         });
+    });
+    </script>
 
-        function openGallery(type) {
-            console.log("Opening gallery for:", type); // Debug log
 
-            const galleryContainer = document.createElement('div');
-            galleryContainer.classList.add('gallery-popup');
-            document.body.appendChild(galleryContainer);
+    // Lazy loading for gallery images
+    document.querySelectorAll('.gallery-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+    e.preventDefault(); // Prevent the default action (scrolling to top)
+    const galleryType = this.dataset.gallery;
+    console.log("Gallery Type Clicked:", galleryType); // Debug log
+    openGallery(galleryType);
+    });
+    });
 
-            let galleryImages = [];
-            switch (type) {
-                case 'residential':
-                    galleryImages = [
-                        { src: '/img/residential1.webp', subtext: 'Living room renovation' },
-                        { src: '/img/residential2.webp', subtext: 'Kitchen makeover' }
-                    ];
-                    break;
-                case 'commercial':
-                    galleryImages = [
-                        { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
-                        { src: '/img/commercial2.jpg', subtext: 'Retail store interior' }
-                    ];
-                    break;
-                case 'other':
-                    galleryImages = [
-                        { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
-                        { src: '/img/other2.jpg', subtext: 'Bathroom tiling' }
-                    ];
-                    break;
-            }
+    function openGallery(type) {
+    console.log("Opening gallery for:", type); // Debug log
 
-            console.log("Gallery Images Loaded:", galleryImages); // Debug log
+    const galleryContainer = document.createElement('div');
+    galleryContainer.classList.add('gallery-popup');
+    document.body.appendChild(galleryContainer);
 
-            let currentIndex = 0;
+    let galleryImages = [];
+    switch (type) {
+    case 'residential':
+    galleryImages = [
+    { src: '/img/residential1.webp', subtext: 'Living room renovation' },
+    { src: '/img/residential2.webp', subtext: 'Kitchen makeover' }
+    ];
+    break;
+    case 'commercial':
+    galleryImages = [
+    { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
+    { src: '/img/commercial2.jpg', subtext: 'Retail store interior' }
+    ];
+    break;
+    case 'other':
+    galleryImages = [
+    { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
+    { src: '/img/other2.jpg', subtext: 'Bathroom tiling' }
+    ];
+    break;
+    }
 
-            function showImage(index) {
-                console.log("Showing image at index:", index); // Debug log
+    console.log("Gallery Images Loaded:", galleryImages); // Debug log
 
-                galleryContainer.innerHTML = `
-            <div class="gallery-content">
-                <span class="gallery-close">&times;</span>
-                <img src="${galleryImages[index].src}" alt="">
-                <div class="gallery-subtext">${galleryImages[index].subtext}</div>
-                <button class="gallery-prev">&lt;</button>
-                <button class="gallery-next">&gt;</button>
-            </div>
-        `;
-            }
+    let currentIndex = 0;
 
-            showImage(currentIndex);
+    function showImage(index) {
+    console.log("Showing image at index:", index); // Debug log
 
-            galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % galleryImages.length;
-                showImage(currentIndex);
-            });
+    galleryContainer.innerHTML = `
+    <div class="gallery-content">
+        <span class="gallery-close">&times;</span>
+        <img src="${galleryImages[index].src}" alt="">
+        <div class="gallery-subtext">${galleryImages[index].subtext}</div>
+        <button class="gallery-prev">&lt;</button>
+        <button class="gallery-next">&gt;</button>
+    </div>
+    `;
+    }
 
-            galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-                showImage(currentIndex);
-            });
+    showImage(currentIndex);
 
-            galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
-                document.body.removeChild(galleryContainer);
-            });
-        }
+    galleryContainer.querySelector('.gallery-next').addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % galleryImages.length;
+    showImage(currentIndex);
+    });
 
-        // Add CSS for the popup gallery
-        const style = document.createElement('style');
-        style.textContent = `
+    galleryContainer.querySelector('.gallery-prev').addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+    showImage(currentIndex);
+    });
+
+    galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
+    document.body.removeChild(galleryContainer);
+    });
+    }
+
+    // Add CSS for the popup gallery
+    const style = document.createElement('style');
+    style.textContent = `
     .gallery-popup {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
     }
 
     .gallery-content {
-        position: relative;
-        max-width: 90%;
-        max-height: 90%;
-        text-align: center;
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    text-align: center;
     }
 
     .gallery-content img {
-        max-width: 100%;
-        max-height: 100%;
-        border-radius: 8px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
     }
 
     .gallery-subtext {
-        color: white;
-        margin-top: 10px;
+    color: white;
+    margin-top: 10px;
     }
 
     .gallery-close {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 30px;
-        color: white;
-        cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
     }
 
     .gallery-prev,
     .gallery-next {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(255, 255, 255, 0.5);
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
     }
 
     .gallery-prev {
-        left: 10px;
+    left: 10px;
     }
 
     .gallery-next {
-        right: 10px;
+    right: 10px;
     }
-`;
-        document.head.appendChild(style);
+    `;
+    document.head.appendChild(style);
 
 
 
