@@ -334,7 +334,7 @@
         // Lazy loading for gallery images
         document.querySelectorAll('.gallery-link').forEach(link => {
             link.addEventListener('click', function (e) {
-                e.preventDefault();
+                e.preventDefault(); // Prevent the default action (scrolling to top)
                 const galleryType = this.dataset.gallery;
                 loadGallery(galleryType);
             });
@@ -349,25 +349,23 @@
             switch (type) {
                 case 'residential':
                     galleryImages = [
-                        {
-                            src: '/img/residential1.webp', subtext: 'RÉNOVATION ROSEMONT ➣ entrée, salon et cuisine'
-                        },
-                        { src: '/img/residential2.jpg', subtext: 'Subtext for Residential Image 2' },
-                        { src: '/img/residential3.jpg', subtext: 'Subtext for Residential Image 3' }
+                        { src: '/img/residential1.jpg', subtext: 'Living room renovation' },
+                        { src: '/img/residential2.jpg', subtext: 'Kitchen makeover' },
+                        { src: '/img/residential3.jpg', subtext: 'Modern bedroom design' }
                     ];
                     break;
                 case 'commercial':
                     galleryImages = [
-                        { src: '/img/commercial1.jpg', subtext: 'Subtext for Commercial Image 1' },
-                        { src: '/img/commercial2.jpg', subtext: 'Subtext for Commercial Image 2' },
-                        { src: '/img/commercial3.jpg', subtext: 'Subtext for Commercial Image 3' }
+                        { src: '/img/commercial1.jpg', subtext: 'Office space redesign' },
+                        { src: '/img/commercial2.jpg', subtext: 'Retail store interior' },
+                        { src: '/img/commercial3.jpg', subtext: 'Conference room setup' }
                     ];
                     break;
                 case 'other':
                     galleryImages = [
-                        { src: '/img/other1.jpg', subtext: 'Subtext for Other Image 1' },
-                        { src: '/img/other2.jpg', subtext: 'Subtext for Other Image 2' },
-                        { src: '/img/other3.jpg', subtext: 'Subtext for Other Image 3' }
+                        { src: '/img/other1.jpg', subtext: 'Custom outdoor deck' },
+                        { src: '/img/other2.jpg', subtext: 'Bathroom tiling' },
+                        { src: '/img/other3.jpg', subtext: 'Garden landscaping' }
                     ];
                     break;
             }
