@@ -301,40 +301,21 @@
                     }
                 }, { passive: true });
 
-                // Handle closing the gallery
-                galleryContainer.querySelector('.gallery-close').addEventListener('click', () => {
+                // Close the gallery when the "X" button is clicked
+                const closeButton = galleryContainer.querySelector('.gallery-close');
+                closeButton.addEventListener('click', function () {
                     console.log("Close button clicked");
-                    galleryContainer.remove();
-                    console.log("Gallery closed");
-                });
-
-                // Ensure the "X" button works after touch events
-                galleryContainer.querySelector('.gallery-close').addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    console.log("Touch end on X detected, closing gallery");
-                    galleryContainer.remove();
-                    console.log("Gallery closed via touch");
+                    galleryContainer.remove(); // Remove the gallery from the DOM
+                    console.log("Gallery closed via X button");
                 });
 
                 // Reset swipe state after touch ends
-                galleryContainer.addEventListener('touchend', () => {
+                galleryScroll.addEventListener('touchend', () => {
                     isSwiping = false;
                     console.log("Touch end detected, swipe state reset");
                 });
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
 
         // Add CSS for the popup gallery
         const style = document.createElement('style');
@@ -396,6 +377,7 @@
     font-size: 30px;
     color: white;
     cursor: pointer;
+    z-index: 10001; /* Ensure the close button is above other elements */
 }
 
 .gallery-prev,
@@ -419,6 +401,7 @@
 }
 `;
         document.head.appendChild(style);
+
 
     </script>
     <script>
