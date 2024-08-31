@@ -113,6 +113,8 @@
           <p><a href="mailto:info@avantagejmr.com">info@avantagejmr.com</a></p>
         </div>
         <form action="https://formspree.io/f/mvgplepr" method="post">
+          <input type="text" name="_honeypot" style="display: none" />
+
           <div class="form-group">
             <label for="name">Nom</label>
             <input type="text" id="name" name="name" required />
@@ -127,6 +129,13 @@
           </div>
           <button type="submit">Soumettre</button>
         </form>
+        <form id="contact-form">
+          <!-- form fields -->
+        </form>
+
+        <div id="success-message" style="display: none">
+          Merci pour votre message! Nous vous répondrons dès que possible.
+        </div>
       </div>
     </section>
 
@@ -496,6 +505,37 @@
           cookieConsentBar.style.display = "none"; // Hide the consent bar
         });
       });
+      document
+        .getElementById("contact-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault(); // Prevent default form submission
+
+          const form = e.target;
+          const data = new FormData(form);
+          const action = form.action;
+
+          fetch(action, {
+            method: "POST",
+            body: data,
+            headers: {
+              Accept: "application/json",
+            },
+          })
+            .then((response) => {
+              if (response.ok) {
+                form.reset();
+                document.getElementById("success-message").style.display =
+                  "block";
+              } else {
+                alert(
+                  "Une erreur s'est produite. Veuillez réessayer plus tard."
+                );
+              }
+            })
+            .catch((error) => {
+              alert("Une erreur s'est produite. Veuillez réessayer plus tard.");
+            });
+        });
     </script>
 
     <!-- Cookie Consent Bar -->
