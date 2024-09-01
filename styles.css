@@ -159,7 +159,7 @@ nav .menu a:hover {
 
 /* Hero Section */
 .hero {
-  background-image: url("/img/hero.jpg");
+  background-image: url("/img/hero.webp");
   background-size: cover;
   background-position: center;
   height: 60vh; /* Adjust this value to control the max height */
