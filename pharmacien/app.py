@@ -1,8 +1,11 @@
+import logging
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def init_db():
@@ -64,6 +67,10 @@ def get_availabilities():
     c.execute("SELECT date, available FROM availability")
     days = c.fetchall()
     conn.close()
+
+    # Log the data being sent to the frontend
+    app.logger.debug(f"Availability data: {days}")
+
     return jsonify(days)
 
 
@@ -74,6 +81,7 @@ def set_availability():
 
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
+
     c.execute("SELECT * FROM availability WHERE date = ?", (date,))
     result = c.fetchone()
 
@@ -81,10 +89,16 @@ def set_availability():
         c.execute(
             "UPDATE availability SET available = ? WHERE date = ?", (available, date)
         )
+        app.logger.debug(
+            f"Updated date {date} to {'available' if available == 1 else 'booked'}"
+        )
     else:
         c.execute(
             "INSERT INTO availability (date, available) VALUES (?, ?)",
             (date, available),
+        )
+        app.logger.debug(
+            f"Inserted new date {date} as {'available' if available == 1 else 'booked'}"
         )
 
     conn.commit()
