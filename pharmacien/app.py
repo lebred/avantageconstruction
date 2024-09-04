@@ -23,13 +23,18 @@ def init_db():
 
 @app.route("/")
 def index():
+    return render_template("index.html")
+
+
+@app.route("/api/availabilities")
+def get_availabilities():
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
     c.execute("SELECT date, available FROM availability")
     days = c.fetchall()
     conn.close()
 
-    return render_template("index.html", days=days)
+    return jsonify(days)
 
 
 @app.route("/set_availability", methods=["POST"])
@@ -40,17 +45,14 @@ def set_availability():
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
 
-    # Check if the date already exists in the database
     c.execute("SELECT * FROM availability WHERE date = ?", (date,))
     result = c.fetchone()
 
     if result:
-        # Update the existing record
         c.execute(
             "UPDATE availability SET available = ? WHERE date = ?", (available, date)
         )
     else:
-        # Insert a new record
         c.execute(
             "INSERT INTO availability (date, available) VALUES (?, ?)",
             (date, available),
@@ -60,17 +62,6 @@ def set_availability():
     conn.close()
 
     return redirect(url_for("index"))
-
-
-@app.route("/get_availabilities")
-def get_availabilities():
-    conn = sqlite3.connect("calendar.db")
-    c = conn.cursor()
-    c.execute("SELECT date, available FROM availability")
-    days = c.fetchall()
-    conn.close()
-
-    return jsonify(days)
 
 
 if __name__ == "__main__":

@@ -49,11 +49,11 @@
             box-sizing: border-box;
             text-align: center;
             margin-bottom: 10px;
+            cursor: pointer;
         }
 
         .available {
             background-color: #e0ffe0;
-            cursor: pointer;
         }
 
         .booked {
@@ -125,6 +125,16 @@
         const selectedDayInput = document.getElementById('selectedDay');
 
         let currentDate = new Date();
+        let availabilities = {};
+
+        async function fetchAvailabilities() {
+            const response = await fetch('/api/availabilities');
+            const data = await response.json();
+            data.forEach(day => {
+                availabilities[day[0]] = day[1];
+            });
+            renderCalendar(currentDate);
+        }
 
         function renderCalendar(date) {
             const year = date.getFullYear();
@@ -141,18 +151,22 @@
             }
 
             for (let day = 1; day <= lastDate; day++) {
+                const dayStr = `${year}-${month + 1}-${day}`;
                 const dayDiv = document.createElement('div');
-                dayDiv.classList.add('day', 'booked'); // All days are booked initially
+                dayDiv.classList.add('day');
                 dayDiv.textContent = day;
 
-                dayDiv.addEventListener('click', function () {
-                    if (!this.classList.contains('booked')) {
+                if (availabilities[dayStr] === 1) {
+                    dayDiv.classList.add('available');
+                    dayDiv.addEventListener('click', function () {
                         const availableDays = document.querySelectorAll('.day.available');
                         availableDays.forEach(d => d.style.border = 'none');
                         this.style.border = '2px solid #155d38';
-                        selectedDayInput.value = `${day}/${month + 1}/${year}`;
-                    }
-                });
+                        selectedDayInput.value = dayStr;
+                    });
+                } else {
+                    dayDiv.classList.add('booked');
+                }
 
                 calendar.appendChild(dayDiv);
             }
@@ -175,7 +189,7 @@
             }
         });
 
-        renderCalendar(currentDate);
+        fetchAvailabilities();
     </script>
 </body>
 
