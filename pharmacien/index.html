@@ -1,76 +1,198 @@
-<script>
-    const calendar = document.getElementById('calendar');
-    const monthYear = document.getElementById('monthYear');
-    const prevMonthBtn = document.getElementById('prevMonth');
-    const nextMonthBtn = document.getElementById('nextMonth');
-    const bookingForm = document.getElementById('bookingForm');
-    const selectedDayInput = document.getElementById('selectedDay');
+<!DOCTYPE html>
+<html lang="fr">
 
-    let currentDate = new Date();
-    let availabilities = {};
-
-    async function fetchAvailabilities() {
-        const response = await fetch('/api/availabilities');
-        const data = await response.json();
-        data.forEach(day => {
-            availabilities[day[0]] = day[1];
-        });
-        renderCalendar(currentDate);
-    }
-
-    function renderCalendar(date) {
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const firstDay = new Date(year, month, 1).getDay();
-        const lastDate = new Date(year, month + 1, 0).getDate();
-        calendar.innerHTML = '';
-        monthYear.textContent = date.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
-
-        for (let i = 0; i < firstDay; i++) {
-            const emptyDiv = document.createElement('div');
-            emptyDiv.classList.add('day');
-            calendar.appendChild(emptyDiv);
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation de Services de Pharmacien</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
 
-        for (let day = 1; day <= lastDate; day++) {
-            const dayStr = `${year}-${month + 1}-${day}`;
-            const dayDiv = document.createElement('div');
-            dayDiv.classList.add('day');
-            dayDiv.textContent = day;
+        header {
+            background-color: #155d38;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
 
-            if (availabilities[dayStr] === 1) {
-                dayDiv.classList.add('available');
-                dayDiv.addEventListener('click', function () {
-                    const availableDays = document.querySelectorAll('.day.available');
-                    availableDays.forEach(d => d.style.border = 'none');
-                    this.style.border = '2px solid #155d38';
-                    selectedDayInput.value = dayStr;
-                });
-            } else {
-                dayDiv.classList.add('booked');
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #155d38;
+        }
+
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .calendar {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .day {
+            width: 14.28%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .available {
+            background-color: #e0ffe0;
+        }
+
+        .booked {
+            background-color: #ffe0e0;
+            cursor: not-allowed;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="email"],
+        input[type="text"],
+        input[type="tel"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #155d38;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Réservez vos services de pharmacien</h1>
+    </header>
+    <div class="container">
+        <h2>Calendrier de disponibilité</h2>
+        <div class="calendar-nav">
+            <button id="prevMonth">Mois Précédent</button>
+            <span id="monthYear"></span>
+            <button id="nextMonth">Mois Suivant</button>
+        </div>
+        <div class="calendar" id="calendar"></div>
+
+        <form id="bookingForm" action="https://formspree.io/f/your-form-id" method="POST">
+            <label for="email">Votre adresse e-mail:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="location">Lieu de la pharmacie:</label>
+            <input type="text" id="location" name="location" required>
+            <label for="phone">Numéro de téléphone:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <label for="schedule">Horaire désiré:</label>
+            <input type="text" id="schedule" name="schedule" required>
+            <input type="hidden" id="selectedDay" name="selectedDay">
+            <input type="submit" value="Réserver">
+        </form>
+    </div>
+
+    <script>
+        const calendar = document.getElementById('calendar');
+        const monthYear = document.getElementById('monthYear');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+        const bookingForm = document.getElementById('bookingForm');
+        const selectedDayInput = document.getElementById('selectedDay');
+
+        let currentDate = new Date();
+        let availabilities = {};
+
+        async function fetchAvailabilities() {
+            const response = await fetch('/api/availabilities');
+            const data = await response.json();
+            data.forEach(day => {
+                availabilities[day[0]] = day[1];
+            });
+            renderCalendar(currentDate);
+        }
+
+        function renderCalendar(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+            calendar.innerHTML = '';
+            monthYear.textContent = date.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.classList.add('day');
+                calendar.appendChild(emptyDiv);
             }
 
-            calendar.appendChild(dayDiv);
+            for (let day = 1; day <= lastDate; day++) {
+                const dayStr = `${year}-${month + 1}-${day}`;
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                dayDiv.textContent = day;
+
+                if (availabilities[dayStr] === 1) {
+                    dayDiv.classList.add('available');
+                    dayDiv.addEventListener('click', function () {
+                        const availableDays = document.querySelectorAll('.day.available');
+                        availableDays.forEach(d => d.style.border = 'none');
+                        this.style.border = '2px solid #155d38';
+                        selectedDayInput.value = dayStr;
+                    });
+                } else {
+                    dayDiv.classList.add('booked');
+                }
+
+                calendar.appendChild(dayDiv);
+            }
         }
-    }
 
-    prevMonthBtn.addEventListener('click', function () {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar(currentDate);
-    });
+        prevMonthBtn.addEventListener('click', function () {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar(currentDate);
+        });
 
-    nextMonthBtn.addEventListener('click', function () {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar(currentDate);
-    });
+        nextMonthBtn.addEventListener('click', function () {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar(currentDate);
+        });
 
-    bookingForm.addEventListener('submit', function (event) {
-        if (!selectedDayInput.value) {
-            event.preventDefault();
-            alert('Veuillez sélectionner un jour disponible.');
-        }
-    });
+        bookingForm.addEventListener('submit', function (event) {
+            if (!selectedDayInput.value) {
+                event.preventDefault();
+                alert('Veuillez sélectionner un jour disponible.');
+            }
+        });
 
-    // Fetch availabilities and render the calendar on initial load
-    fetchAvailabilities();
-</script>
+        // Fetch availabilities and render the calendar on initial load
+        fetchAvailabilities();
+    </script>
+
+</body>
+
+</html>
