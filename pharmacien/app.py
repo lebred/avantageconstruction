@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ def init_db():
         """
         CREATE TABLE IF NOT EXISTS availability (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date TEXT NOT NULL,
+            date TEXT NOT NULL UNIQUE,
             available INTEGER NOT NULL DEFAULT 0
         )
     """
@@ -21,9 +21,39 @@ def init_db():
     conn.close()
 
 
+def populate_dates():
+    conn = sqlite3.connect("calendar.db")
+    c = conn.cursor()
+
+    # Get the first day of the current month
+    today = datetime.today()
+    first_day = today.replace(day=1)
+
+    # Populate for the current month
+    num_days = (
+        first_day.replace(month=today.month % 12 + 1, day=1) - timedelta(days=1)
+    ).day
+    for i in range(num_days):
+        date_str = (first_day + timedelta(days=i)).strftime("%Y-%m-%d")
+        c.execute(
+            "INSERT OR IGNORE INTO availability (date, available) VALUES (?, 0)",
+            (date_str,),
+        )
+
+    # You can add more months by repeating the loop for other months
+    conn.commit()
+    conn.close()
+
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    populate_dates()  # Ensure dates are populated every time the index is loaded
+    conn = sqlite3.connect("calendar.db")
+    c = conn.cursor()
+    c.execute("SELECT date, available FROM availability")
+    days = c.fetchall()
+    conn.close()
+    return render_template("index.html", days=days)
 
 
 @app.route("/api/availabilities")
@@ -33,7 +63,6 @@ def get_availabilities():
     c.execute("SELECT date, available FROM availability")
     days = c.fetchall()
     conn.close()
-
     return jsonify(days)
 
 
@@ -66,4 +95,5 @@ def set_availability():
 
 if __name__ == "__main__":
     init_db()
+    populate_dates()  # Populate dates on server start
     app.run(debug=True)
