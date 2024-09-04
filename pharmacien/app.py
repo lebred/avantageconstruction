@@ -25,11 +25,8 @@ def populate_dates():
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
 
-    # Get the first day of the current month
     today = datetime.today()
     first_day = today.replace(day=1)
-
-    # Populate for the current month
     num_days = (
         first_day.replace(month=today.month % 12 + 1, day=1) - timedelta(days=1)
     ).day
@@ -40,20 +37,24 @@ def populate_dates():
             (date_str,),
         )
 
-    # You can add more months by repeating the loop for other months
     conn.commit()
     conn.close()
 
 
 @app.route("/")
 def index():
-    populate_dates()  # Ensure dates are populated every time the index is loaded
+    populate_dates()
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
     c.execute("SELECT date, available FROM availability")
     days = c.fetchall()
     conn.close()
     return render_template("index.html", days=days)
+
+
+@app.route("/calendar")
+def calendar():
+    return render_template("calendar.html")
 
 
 @app.route("/api/availabilities")
@@ -73,7 +74,6 @@ def set_availability():
 
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
-
     c.execute("SELECT * FROM availability WHERE date = ?", (date,))
     result = c.fetchone()
 
@@ -95,5 +95,4 @@ def set_availability():
 
 if __name__ == "__main__":
     init_db()
-    populate_dates()  # Populate dates on server start
     app.run(debug=True)
