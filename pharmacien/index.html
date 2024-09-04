@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation de Services de Pharmacien</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #155d38;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #155d38;
+        }
+
+        .calendar {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .day {
+            width: 14.28%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .available {
+            background-color: #e0ffe0;
+        }
+
+        .booked {
+            background-color: #ffe0e0;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="email"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #155d38;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Réservez vos services de pharmacien</h1>
+    </header>
+    <div class="container">
+        <h2>Calendrier de disponibilité</h2>
+        <div class="calendar">
+            <div class="day available">1</div>
+            <div class="day booked">2</div>
+            <div class="day available">3</div>
+            <!-- Repeat for each day of the month -->
+        </div>
+
+        <form id="bookingForm">
+            <label for="email">Votre adresse e-mail:</label>
+            <input type="email" id="email" name="email" required>
+            <input type="hidden" id="selectedDay" name="selectedDay">
+            <input type="submit" value="Réserver">
+        </form>
+    </div>
+
+    <script>
+        const availableDays = document.querySelectorAll('.day.available');
+        const bookingForm = document.getElementById('bookingForm');
+        const selectedDayInput = document.getElementById('selectedDay');
+
+        availableDays.forEach(day => {
+            day.addEventListener('click', function () {
+                availableDays.forEach(d => d.style.border = 'none');
+                this.style.border = '2px solid #155d38';
+                selectedDayInput.value = this.textContent;
+            });
+        });
+
+        bookingForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            alert('Votre demande a été envoyée pour le jour: ' + selectedDayInput.value);
+            // Here, you would send the data to your backend or database
+        });
+    </script>
+</body>
+
+</html>
