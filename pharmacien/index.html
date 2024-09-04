@@ -127,20 +127,24 @@
         let currentDate = new Date();
         let availabilities = {};
 
+        function formatDate(year, month, day) {
+            return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+
         async function fetchAvailabilities() {
             const response = await fetch('/api/availabilities');
             const data = await response.json();
             data.forEach(day => {
                 availabilities[day[0]] = day[1];
             });
-            renderCalendar(currentDate);
+            renderCalendar(currentDate);  // Ensure the calendar is rendered after data is fetched
         }
 
         function renderCalendar(date) {
             const year = date.getFullYear();
-            const month = date.getMonth();
-            const firstDay = new Date(year, month, 1).getDay();
-            const lastDate = new Date(year, month + 1, 0).getDate();
+            const month = date.getMonth() + 1; // Add 1 to month since getMonth() is zero-based
+            const firstDay = new Date(year, month - 1, 1).getDay();
+            const lastDate = new Date(year, month, 0).getDate(); // Last date of the current month
             calendar.innerHTML = '';
             monthYear.textContent = date.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
 
@@ -151,7 +155,7 @@
             }
 
             for (let day = 1; day <= lastDate; day++) {
-                const dayStr = `${year}-${month + 1}-${day}`;
+                const dayStr = formatDate(year, month, day);
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('day');
                 dayDiv.textContent = day;
@@ -192,6 +196,7 @@
         // Fetch availabilities and render the calendar on initial load
         fetchAvailabilities();
     </script>
+
 
 </body>
 
