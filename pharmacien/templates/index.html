@@ -96,6 +96,7 @@
                 Suivant</a>
         </div>
         <div class="calendar">
+            {% if days %}
             {% for day in days %}
             <div class="day {% if day[1] == 1 %}available{% else %}booked{% endif %}">
                 <form action="{{ url_for('set_availability') }}" method="POST">
@@ -108,6 +109,9 @@
                 </form>
             </div>
             {% endfor %}
+            {% else %}
+            <p>Aucune donnée disponible pour ce mois.</p>
+            {% endif %}
         </div>
     </div>
 </body>
