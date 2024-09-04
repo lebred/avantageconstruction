@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Disponibilités</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #155d38;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #155d38;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .available {
+            background-color: #e0ffe0;
+        }
+
+        .booked {
+            background-color: #ffe0e0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Gestion des Disponibilités</h1>
+    </header>
+    <div class="container">
+        <h2>Calendrier</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Disponibilité</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day in days %}
+                <tr>
+                    <td>{{ day[0] }}</td>
+                    <td class="{{ 'available' if day[1] == 1 else 'booked' }}">
+                        {{ 'Disponible' if day[1] == 1 else 'Réservé' }}
+                    </td>
+                    <td>
+                        <form action="{{ url_for('set_availability') }}" method="POST">
+                            <input type="hidden" name="date" value="{{ day[0] }}">
+                            <input type="hidden" name="available" value="{{ 0 if day[1] == 1 else 1 }}">
+                            <input type="submit" value="{{ 'Fermer' if day[1] == 1 else 'Ouvrir' }} la disponibilité">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
