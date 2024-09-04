@@ -32,16 +32,24 @@
             color: #155d38;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
-        th,
-        td {
-            padding: 10px;
-            border: 1px solid #ddd;
+        .calendar {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .day {
+            width: 14.28%;
+            padding: 20px;
+            box-sizing: border-box;
             text-align: center;
+            margin-bottom: 10px;
+            cursor: pointer;
         }
 
         .available {
@@ -50,6 +58,27 @@
 
         .booked {
             background-color: #ffe0e0;
+            cursor: not-allowed;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            background-color: #155d38;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -59,33 +88,27 @@
         <h1>Gestion des Disponibilités</h1>
     </header>
     <div class="container">
-        <h2>Calendrier</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Disponibilité</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for day in days %}
-                <tr>
-                    <td>{{ day[0] }}</td>
-                    <td class="{{ 'available' if day[1] == 1 else 'booked' }}">
-                        {{ 'Disponible' if day[1] == 1 else 'Réservé' }}
-                    </td>
-                    <td>
-                        <form action="{{ url_for('set_availability') }}" method="POST">
-                            <input type="hidden" name="date" value="{{ day[0] }}">
-                            <input type="hidden" name="available" value="{{ 0 if day[1] == 1 else 1 }}">
-                            <input type="submit" value="{{ 'Fermer' if day[1] == 1 else 'Ouvrir' }} la disponibilité">
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="calendar-nav">
+            <a href="?month={{ month - 1 if month > 1 else 12 }}&year={{ year if month > 1 else year - 1 }}">Mois
+                Précédent</a>
+            <span>{{ month }}/{{ year }}</span>
+            <a href="?month={{ month + 1 if month < 12 else 1 }}&year={{ year if month < 12 else year + 1 }}">Mois
+                Suivant</a>
+        </div>
+        <div class="calendar">
+            {% for day in days %}
+            <div class="day {% if day[1] == 1 %}available{% else %}booked{% endif %}">
+                <form action="{{ url_for('set_availability') }}" method="POST">
+                    {{ day[0][-2:] }}
+                    <input type="hidden" name="date" value="{{ day[0] }}">
+                    <input type="hidden" name="available" value="{{ 0 if day[1] == 1 else 1 }}">
+                    <input type="hidden" name="month" value="{{ month }}">
+                    <input type="hidden" name="year" value="{{ year }}">
+                    <input type="submit" value="{{ 'Fermer' if day[1] == 1 else 'Ouvrir' }}">
+                </form>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 

@@ -1,11 +1,8 @@
-import logging
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 def init_db():
@@ -24,16 +21,15 @@ def init_db():
     conn.close()
 
 
-def populate_dates():
+def populate_dates(month, year):
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
 
-    today = datetime.today()
-    first_day = today.replace(day=1)
-    num_days = (
-        first_day.replace(month=today.month % 12 + 1, day=1) - timedelta(days=1)
-    ).day
-    for i in range(num_days):
+    first_day = datetime(year, month, 1)
+    last_day = first_day.replace(day=28) + timedelta(days=4)
+    last_day = last_day - timedelta(days=last_day.day)
+
+    for i in range((last_day - first_day).days + 1):
         date_str = (first_day + timedelta(days=i)).strftime("%Y-%m-%d")
         c.execute(
             "INSERT OR IGNORE INTO availability (date, available) VALUES (?, 0)",
@@ -46,13 +42,21 @@ def populate_dates():
 
 @app.route("/")
 def index():
-    populate_dates()
+    month = request.args.get("month", default=datetime.now().month, type=int)
+    year = request.args.get("year", default=datetime.now().year, type=int)
+
+    populate_dates(month, year)
+
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
-    c.execute("SELECT date, available FROM availability")
+    c.execute(
+        'SELECT date, available FROM availability WHERE strftime("%m", date) = ? AND strftime("%Y", date) = ?',
+        (f"{month:02d}", year),
+    )
     days = c.fetchall()
     conn.close()
-    return render_template("index.html", days=days)
+
+    return render_template("index.html", days=days, month=month, year=year)
 
 
 @app.route("/calendar")
@@ -67,10 +71,6 @@ def get_availabilities():
     c.execute("SELECT date, available FROM availability")
     days = c.fetchall()
     conn.close()
-
-    # Log the data being sent to the frontend
-    app.logger.debug(f"Availability data: {days}")
-
     return jsonify(days)
 
 
@@ -82,29 +82,13 @@ def set_availability():
     conn = sqlite3.connect("calendar.db")
     c = conn.cursor()
 
-    c.execute("SELECT * FROM availability WHERE date = ?", (date,))
-    result = c.fetchone()
-
-    if result:
-        c.execute(
-            "UPDATE availability SET available = ? WHERE date = ?", (available, date)
-        )
-        app.logger.debug(
-            f"Updated date {date} to {'available' if available == 1 else 'booked'}"
-        )
-    else:
-        c.execute(
-            "INSERT INTO availability (date, available) VALUES (?, ?)",
-            (date, available),
-        )
-        app.logger.debug(
-            f"Inserted new date {date} as {'available' if available == 1 else 'booked'}"
-        )
-
+    c.execute("UPDATE availability SET available = ? WHERE date = ?", (available, date))
     conn.commit()
     conn.close()
 
-    return redirect(url_for("index"))
+    return redirect(
+        url_for("index", month=request.form["month"], year=request.form["year"])
+    )
 
 
 if __name__ == "__main__":
