@@ -142,9 +142,9 @@
 
         function renderCalendar(date) {
             const year = date.getFullYear();
-            const month = date.getMonth() + 1; // Add 1 to month since getMonth() is zero-based
-            const firstDay = new Date(year, month - 1, 1).getDay();
-            const lastDate = new Date(year, month, 0).getDate(); // Last date of the current month
+            const month = date.getMonth(); // No need to add 1 here, we use it directly
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate(); // Last date of the current month
             calendar.innerHTML = '';
             monthYear.textContent = date.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
 
@@ -155,7 +155,7 @@
             }
 
             for (let day = 1; day <= lastDate; day++) {
-                const dayStr = formatDate(year, month, day);
+                const dayStr = formatDate(year, month + 1, day); // Now we add 1 when formatting
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('day');
                 dayDiv.textContent = day;
